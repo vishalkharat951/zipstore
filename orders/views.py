@@ -94,6 +94,9 @@ class CheckoutView(FormView):
 
         payment_method = form.cleaned_data.get('payment_method', 'upi')
 
+        if payment_method == 'upi':
+            return redirect('payments:upi_payment', order_id=order.pk)
+
         if settings.DEBUG:
             order.payment_status = Order.PaymentStatus.COMPLETED
             order.order_status = Order.OrderStatus.CONFIRMED
@@ -103,9 +106,6 @@ class CheckoutView(FormView):
                 f'Order {order.order_id} placed successfully! (Payment skipped in development)',
             )
             return redirect('orders:order_detail', pk=order.pk)
-
-        if payment_method == 'upi':
-            return redirect('payments:upi_payment', order_id=order.pk)
 
         return redirect('payments:initiate_payment', order_id=order.pk)
 
