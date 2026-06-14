@@ -144,8 +144,9 @@ ${items.map(item => `
           body: JSON.stringify({ name: 'Guest', email: guestId + '@zipstore.app', password: guestId }),
         });
         if (regRes.ok) {
+          const regText = await regRes.text();
           let regData;
-          try { regData = await regRes.json(); } catch { regData = {}; }
+          try { regData = JSON.parse(regText); } catch { regData = {}; }
           token = regData.token;
           localStorage.setItem('zipstore_token', token);
         }
@@ -163,13 +164,14 @@ ${items.map(item => `
           headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
           body: JSON.stringify(orderBody),
         });
+        const orderBodyText = await orderRes.text();
         if (!orderRes.ok) {
           let errMsg;
-          try { const err = await orderRes.json(); errMsg = err.error; } catch { errMsg = await orderRes.text(); }
+          try { errMsg = JSON.parse(orderBodyText).error; } catch { errMsg = orderBodyText; }
           throw new Error(errMsg || 'Failed to create order');
         }
         let order;
-        try { order = await orderRes.json(); } catch { throw new Error('Server returned invalid response'); }
+        try { order = JSON.parse(orderBodyText); } catch { throw new Error('Server returned invalid response'); }
         const orderId = order.order._id || order.order.id;
         const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
@@ -179,13 +181,14 @@ ${items.map(item => `
             headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
             body: JSON.stringify({ orderId }),
           });
+          const upiText = await upiRes.text();
           if (!upiRes.ok) {
             let upiErrMsg;
-            try { const e = await upiRes.json(); upiErrMsg = e.error; } catch { upiErrMsg = await upiRes.text(); }
+            try { upiErrMsg = JSON.parse(upiText).error; } catch { upiErrMsg = upiText; }
             throw new Error(upiErrMsg || 'UPI initiation failed');
           }
           let upiData;
-          try { upiData = await upiRes.json(); } catch { throw new Error('Server returned invalid response'); }
+          try { upiData = JSON.parse(upiText); } catch { throw new Error('Server returned invalid response'); }
           Cart.clear();
           const upiHtml = `
             <div style="text-align:center;padding:var(--space-6) 0">
@@ -251,13 +254,14 @@ ${items.map(item => `
             headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
             body: JSON.stringify({ orderId }),
           });
+          const ppText = await ppRes.text();
           if (!ppRes.ok) {
             let ppErrMsg;
-            try { const e = await ppRes.json(); ppErrMsg = e.error; } catch { ppErrMsg = await ppRes.text(); }
+            try { ppErrMsg = JSON.parse(ppText).error; } catch { ppErrMsg = ppText; }
             throw new Error(ppErrMsg || 'PhonePe initiation failed');
           }
           let ppData;
-          try { ppData = await ppRes.json(); } catch { throw new Error('Server returned invalid response'); }
+          try { ppData = JSON.parse(ppText); } catch { throw new Error('Server returned invalid response'); }
           if (ppData.redirectUrl) {
             Cart.clear();
             window.location.href = ppData.redirectUrl;
@@ -270,13 +274,14 @@ ${items.map(item => `
           headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
           body: JSON.stringify({ orderId }),
         });
+        const payText = await payRes.text();
         if (!payRes.ok) {
           let payErrMsg;
-          try { const e = await payRes.json(); payErrMsg = e.error; } catch { payErrMsg = await payRes.text(); }
+          try { payErrMsg = JSON.parse(payText).error; } catch { payErrMsg = payText; }
           throw new Error(payErrMsg || 'Payment failed');
         }
         let payment;
-        try { payment = await payRes.json(); } catch { throw new Error('Server returned invalid response'); }
+        try { payment = JSON.parse(payText); } catch { throw new Error('Server returned invalid response'); }
         Cart.clear();
         checkoutView.innerHTML = `
           <div class="cart-empty">
