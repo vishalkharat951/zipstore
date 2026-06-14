@@ -8,6 +8,7 @@
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
 <link rel="preconnect" href="https://placehold.co">
 <link rel="stylesheet" href="css/global.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <nav class="navbar">
@@ -106,106 +107,180 @@ ${items.map(item => `
 <span>₹${total.toFixed(2)}</span>
 </div>
 </div>
-<div style="margin-bottom:var(--space-4)">
-<label style="display:block;font-weight:600;margin-bottom:var(--space-2)">Payment Method</label>
-<label style="display:inline-flex;align-items:center;gap:var(--space-2);margin-right:var(--space-4);cursor:pointer">
-<input type="radio" name="paymentMethod" value="mock" checked>
-Mock Payment
-</label>
-<label style="display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer">
-<input type="radio" name="paymentMethod" value="phonepe">
-PhonePe
-</label>
-</div>
-<button type="submit" class="btn btn-secondary btn-block" id="place-order-btn">Place Order — ₹${total.toFixed(2)}</button>
-</form>
-`;
-document.getElementById('checkout-form').addEventListener('submit', async (e) => {
-e.preventDefault();
-const shippingAddress = {
-name: document.getElementById('name').value,
-phone: document.getElementById('phone').value,
-street: document.getElementById('street').value,
-city: document.getElementById('city').value,
-state: document.getElementById('state').value,
-};
-let token = localStorage.getItem('zipstore_token');
-if (!token) {
-const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-const regRes = await fetch(API_BASE_URL + '/auth/register', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ name: 'Guest', email: guestId + '@zipstore.app', password: guestId }),
-});
-if (regRes.ok) {
-const regData = await regRes.json();
-token = regData.token;
-localStorage.setItem('zipstore_token', token);
-}
-}
-const orderBody = {
-items: items.map(i => ({ productId: i.productId, quantity: i.quantity })),
-shippingAddress,
-};
-const btn = document.getElementById('place-order-btn');
-btn.disabled = true;
-btn.textContent = 'Processing...';
-try {
-const orderRes = await fetch(`${API_BASE_URL}/orders`, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-body: JSON.stringify(orderBody),
-});
-if (!orderRes.ok) {
-const err = await orderRes.json();
-throw new Error(err.error || 'Failed to create order');
-}
-const order = await orderRes.json();
-const orderId = order.order._id || order.order.id;
-const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-if (paymentMethod === 'phonepe') {
-const ppRes = await fetch(`${API_BASE_URL}/payments/phonepe-initiate`, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-body: JSON.stringify({ orderId }),
-});
-if (!ppRes.ok) {
-const ppErr = await ppRes.json();
-throw new Error(ppErr.error || 'PhonePe initiation failed');
-}
-const ppData = await ppRes.json();
-if (ppData.redirectUrl) {
-Cart.clear();
-window.location.href = ppData.redirectUrl;
-return;
-}
-throw new Error('No redirect URL from PhonePe');
-}
-const payRes = await fetch(`${API_BASE_URL}/payments/checkout-mock`, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-body: JSON.stringify({ orderId }),
-});
-if (!payRes.ok) {
-throw new Error('Payment failed');
-}
-const payment = await payRes.json();
-Cart.clear();
-checkoutView.innerHTML = `
-<div class="cart-empty">
-<h2>Order Confirmed!</h2>
-<p>Your order (ID: ${orderId}) has been placed successfully.</p>
-<p>Payment status: <strong>${payment.order.paymentStatus}</strong></p>
-<p style="margin-top:var(--space-4)"><a href="my-orders.html" class="btn btn-secondary">View My Orders</a></p>
-<a href="shop.html" class="btn btn-outline-dark" style="margin-top:var(--space-3)">Continue Shopping</a>
-</div>
-`;
-} catch (err) {
-btn.disabled = false;
-btn.textContent = 'Place Order — ₹' + total.toFixed(2);
-showToast(err.message || 'Checkout failed. Please try again.', 'error');
-}
-});
+    <div style="margin-bottom:var(--space-4)">
+      <label style="display:block;font-weight:600;margin-bottom:var(--space-2)">Payment Method</label>
+      <label style="display:inline-flex;align-items:center;gap:var(--space-2);margin-right:var(--space-4);cursor:pointer">
+        <input type="radio" name="paymentMethod" value="upi" checked>
+        <strong>UPI</strong> <span style="font-size:0.85em;color:var(--color-muted)">(GPay, PhonePe, Paytm)</span>
+      </label>
+      <label style="display:inline-flex;align-items:center;gap:var(--space-2);margin-right:var(--space-4);cursor:pointer">
+        <input type="radio" name="paymentMethod" value="phonepe">
+        PhonePe
+      </label>
+      <label style="display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer">
+        <input type="radio" name="paymentMethod" value="mock">
+        Mock Payment
+      </label>
+    </div>
+    <button type="submit" class="btn btn-secondary btn-block" id="place-order-btn">Place Order — ₹${total.toFixed(2)}</button>
+    </form>
+    `;
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const shippingAddress = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        street: document.getElementById('street').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+      };
+      let token = localStorage.getItem('zipstore_token');
+      if (!token) {
+        const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        const regRes = await fetch(API_BASE_URL + '/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'Guest', email: guestId + '@zipstore.app', password: guestId }),
+        });
+        if (regRes.ok) {
+          const regData = await regRes.json();
+          token = regData.token;
+          localStorage.setItem('zipstore_token', token);
+        }
+      }
+      const orderBody = {
+        items: items.map(i => ({ productId: i.productId, quantity: i.quantity })),
+        shippingAddress,
+      };
+      const btn = document.getElementById('place-order-btn');
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      try {
+        const orderRes = await fetch(`${API_BASE_URL}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          body: JSON.stringify(orderBody),
+        });
+        if (!orderRes.ok) {
+          const err = await orderRes.json();
+          throw new Error(err.error || 'Failed to create order');
+        }
+        const order = await orderRes.json();
+        const orderId = order.order._id || order.order.id;
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+        if (paymentMethod === 'upi') {
+          const upiRes = await fetch(`${API_BASE_URL}/payments/upi-initiate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            body: JSON.stringify({ orderId }),
+          });
+          if (!upiRes.ok) {
+            const upiErr = await upiRes.json();
+            throw new Error(upiErr.error || 'UPI initiation failed');
+          }
+          const upiData = await upiRes.json();
+          Cart.clear();
+          checkoutView.innerHTML = \`
+            <div style="text-align:center;padding:var(--space-6) 0">
+              <div style="font-size:2.5rem;margin-bottom:var(--space-3)">📱</div>
+              <h2 style="margin-bottom:var(--space-2)">UPI Payment</h2>
+              <p style="color:var(--color-muted);margin-bottom:var(--space-5)">Scan QR or tap button to pay with any UPI app</p>
+
+              <div style="background:#f8f9fa;border-radius:12px;padding:var(--space-4);margin-bottom:var(--space-4);display:inline-block">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);margin-bottom:var(--space-3);font-size:0.9em">
+                  <span style="text-align:left;color:var(--color-muted)">Amount</span>
+                  <span style="text-align:right;font-weight:700;font-size:1.2em">₹${upiData.amount.toFixed(2)}</span>
+                  <span style="text-align:left;color:var(--color-muted)">Payee</span>
+                  <span style="text-align:right;font-weight:600">${upiData.merchantName}</span>
+                  <span style="text-align:left;color:var(--color-muted)">UPI ID</span>
+                  <span style="text-align:right;font-weight:600">${upiData.upiId}</span>
+                </div>
+                <div id="upi-qr-container" style="background:#fff;border-radius:8px;padding:var(--space-3);display:inline-block"></div>
+              </div>
+
+              <div style="margin-bottom:var(--space-4)">
+                <a href="${upiData.upiUrl}" style="display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-primary);color:#fff;padding:14px 28px;border-radius:50px;font-size:1.05em;font-weight:600;text-decoration:none" id="upi-pay-link" onclick="this.textContent='Opening UPI app...';this.style.opacity='0.7'">
+                  <span>💳</span> Pay ₹${upiData.amount.toFixed(2)} via UPI
+                </a>
+              </div>
+
+              <div style="display:flex;gap:var(--space-2);justify-content:center;margin-bottom:var(--space-4);flex-wrap:wrap">
+                <span style="background:#e8f5e9;padding:4px 12px;border-radius:20px;font-size:0.8em;font-weight:500">GPay</span>
+                <span style="background:#e8eaf6;padding:4px 12px;border-radius:20px;font-size:0.8em;font-weight:500">PhonePe</span>
+                <span style="background:#fff3e0;padding:4px 12px;border-radius:20px;font-size:0.8em;font-weight:500">Paytm</span>
+                <span style="background:#f3e5f5;padding:4px 12px;border-radius:20px;font-size:0.8em;font-weight:500">BHIM</span>
+              </div>
+
+              <div style="background:#e3f2fd;border-radius:12px;padding:var(--space-3);margin-bottom:var(--space-4);text-align:left;font-size:0.9em">
+                ⓘ After paying in your UPI app, click below. Your order will stay <strong>Payment Pending</strong> until confirmed by the store.
+              </div>
+
+              <a href="my-orders.html" class="btn btn-secondary" style="display:inline-block">
+                ✅ I've Completed the Payment
+              </a>
+              <p style="margin-top:var(--space-3)"><a href="my-orders.html" style="font-size:0.85em">View My Orders</a></p>
+            </div>
+          \`;
+          setTimeout(() => {
+            const container = document.getElementById('upi-qr-container');
+            if (container && typeof QRCode !== 'undefined') {
+              new QRCode(container, {
+                text: '${upiData.upiUrl}',
+                width: 220,
+                height: 220,
+                colorDark: '#000',
+                colorLight: '#fff',
+                correctLevel: QRCode.CorrectLevel.H,
+              });
+            }
+          }, 100);
+          return;
+        }
+
+        if (paymentMethod === 'phonepe') {
+          const ppRes = await fetch(`${API_BASE_URL}/payments/phonepe-initiate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            body: JSON.stringify({ orderId }),
+          });
+          if (!ppRes.ok) {
+            const ppErr = await ppRes.json();
+            throw new Error(ppErr.error || 'PhonePe initiation failed');
+          }
+          const ppData = await ppRes.json();
+          if (ppData.redirectUrl) {
+            Cart.clear();
+            window.location.href = ppData.redirectUrl;
+            return;
+          }
+          throw new Error('No redirect URL from PhonePe');
+        }
+        const payRes = await fetch(`${API_BASE_URL}/payments/checkout-mock`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          body: JSON.stringify({ orderId }),
+        });
+        if (!payRes.ok) {
+          throw new Error('Payment failed');
+        }
+        const payment = await payRes.json();
+        Cart.clear();
+        checkoutView.innerHTML = \`
+          <div class="cart-empty">
+            <h2>Order Confirmed!</h2>
+            <p>Your order (ID: ${orderId}) has been placed successfully.</p>
+            <p>Payment status: <strong>${payment.order.paymentStatus}</strong></p>
+            <p style="margin-top:var(--space-4)"><a href="my-orders.html" class="btn btn-secondary">View My Orders</a></p>
+            <a href="shop.html" class="btn btn-outline-dark" style="margin-top:var(--space-3)">Continue Shopping</a>
+          </div>
+        \`;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Place Order — ₹' + total.toFixed(2);
+        showToast(err.message || 'Checkout failed. Please try again.', 'error');
+      }
+    });
 }
 renderCheckout();
 </script>

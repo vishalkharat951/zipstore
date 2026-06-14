@@ -1,6 +1,66 @@
 const crypto = require('crypto');
 const Order = require('../models/Order');
 
+const UPI_ID = '8669303401@ybl';
+const MERCHANT_NAME = 'ZipStore';
+
+
+function generateUPIUrl(amount, orderId, transactionRef) {
+  const tn = `Order ${orderId}`;
+  return (
+    `upi://pay?pa=${UPI_ID}` +
+    `&pn=${encodeURIComponent(MERCHANT_NAME)}` +
+    `&am=${amount.toFixed(2)}` +
+    `&tn=${encodeURIComponent(tn)}` +
+    `&tr=${transactionRef}` +
+    `&cu=INR`
+  );
+}
+
+
+exports.initiateUPI = async (req, res, next) => {
+  try {
+    const { orderId } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ error: 'orderId is required' });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    if (order.paymentStatus === 'paid') {
+      return res.status(400).json({ error: 'Order is already paid' });
+    }
+
+    const transactionRef = 'UPI_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const upiUrl = generateUPIUrl(order.totalAmount, order._id, transactionRef);
+
+    order.paymentMethod = 'upi';
+    order.transactionId = transactionRef;
+    order.paymentStatus = 'pending';
+    await order.save();
+
+    res.json({
+      success: true,
+      upiUrl,
+      transactionRef,
+      upiId: UPI_ID,
+      merchantName: MERCHANT_NAME,
+      amount: order.totalAmount,
+      order: {
+        id: order._id,
+        paymentStatus: order.paymentStatus,
+        orderStatus: order.orderStatus,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.checkoutMock = async (req, res, next) => {
   try {
     const { orderId } = req.body;

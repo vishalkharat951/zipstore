@@ -47,7 +47,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['mock', 'phonepe'],
+    enum: ['mock', 'phonepe', 'upi'],
     default: 'mock',
   },
   transactionId: {
