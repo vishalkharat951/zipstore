@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold mb-4">Shop by Category</h1>
+
+<div class="row g-4">
+  {% for category in categories %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <a href="{% url 'products:product_list_by_category' category_slug=category.slug %}" class="text-decoration-none">
+        <div class="card border-0 shadow-sm text-center p-4 category-card h-100">
+          {% if category.image %}
+            <img src="{{ category.image.url }}" class="rounded-circle mx-auto mb-3" width="100" height="100" style="object-fit:cover;" alt="{{ category.name }}">
+          {% else %}
+            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width:100px;height:100px;">
+              <i class="bi bi-folder2-open display-4 text-muted"></i>
+            </div>
+          {% endif %}
+          <h5 class="text-dark">{{ category.name }}</h5>
+          <div class="text-muted small">{{ category.products__count }} product{{ category.products__count|pluralize }}</div>
+        </div>
+      </a>
+    </div>
+  {% empty %}
+    <div class="col-12 text-center py-5">
+      <i class="bi bi-grid display-1 text-muted"></i>
+      <p class="text-muted mt-3">No categories available yet.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

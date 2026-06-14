@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Management Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="section-title mb-1">Management Portal</h1>
+    <p class="section-subtitle mb-0">Access admin tools and your personal dashboard.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <a href="{% url 'dashboard' %}" class="text-decoration-none">
+        <div class="card-premium p-4 d-flex align-items-center gap-3">
+          <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+            <i class="bi bi-grid text-primary fs-3"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold mb-1">Dashboard</h5>
+            <p class="text-muted mb-0 small">View your orders, spending, and account activity.</p>
+          </div>
+          <i class="bi bi-chevron-right text-muted ms-auto fs-5"></i>
+        </div>
+      </a>
+    </div>
+    {% if user.is_staff or user.is_superuser %}
+    <div class="col-md-6">
+      <a href="{% url 'admin:index' %}" class="text-decoration-none">
+        <div class="card-premium p-4 d-flex align-items-center gap-3">
+          <div class="bg-warning bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+            <i class="bi bi-shield-lock text-warning fs-3"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold mb-1">Admin Panel</h5>
+            <p class="text-muted mb-0 small">Manage products, orders, customers, and site settings.</p>
+          </div>
+          <i class="bi bi-chevron-right text-muted ms-auto fs-5"></i>
+        </div>
+      </a>
+    </div>
+    {% endif %}
+    <div class="col-md-6">
+      <a href="{% url 'accounts:profile' %}" class="text-decoration-none">
+        <div class="card-premium p-4 d-flex align-items-center gap-3">
+          <div class="bg-success bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+            <i class="bi bi-person text-success fs-3"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold mb-1">Profile</h5>
+            <p class="text-muted mb-0 small">Update your personal information and preferences.</p>
+          </div>
+          <i class="bi bi-chevron-right text-muted ms-auto fs-5"></i>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a href="{% url 'orders:order_list' %}" class="text-decoration-none">
+        <div class="card-premium p-4 d-flex align-items-center gap-3">
+          <div class="bg-info bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+            <i class="bi bi-box text-info fs-3"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold mb-1">Orders</h5>
+            <p class="text-muted mb-0 small">Track and manage all your orders.</p>
+          </div>
+          <i class="bi bi-chevron-right text-muted ms-auto fs-5"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

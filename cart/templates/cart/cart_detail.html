@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="section-header">
+    <div>
+      <h1 class="section-title">Shopping Cart</h1>
+      <p class="section-subtitle">{{ cart.total_items }} item{{ cart.total_items|pluralize }} in your cart</p>
+    </div>
+    {% if items %}
+      <form action="{% url 'cart:clear_cart' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger rounded-pill btn-premium">
+          <i class="bi bi-trash me-1"></i> Clear
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if items %}
+    <div class="row g-4">
+      <div class="col-lg-8">
+        {% for item in items %}
+          <div class="cart-item-premium p-3 p-md-4">
+            <div class="row align-items-center g-3">
+              <div class="col-md-2">
+                <div class="cart-item-img-wrapper">
+                  {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" class="cart-item-img" alt="{{ item.product.name }}">
+                  {% else %}
+                    <img src="{% static 'images/placeholder.svg' %}" class="cart-item-img" alt="{{ item.product.name }}">
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <h6 class="fw-semibold mb-1">
+                  <a href="{% url 'products:product_detail' category_slug=item.product.category.slug slug=item.product.slug %}" class="text-decoration-none text-dark">
+                    {{ item.product.name }}
+                  </a>
+                </h6>
+                <p class="text-muted small mb-0">{{ item.product.category.name }}</p>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex align-items-center gap-2">
+                  <form action="{% url 'cart:update_cart_item' item.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="quantity" value="{{ item.quantity|add:-1 }}" class="qty-btn" {% if item.quantity <= 1 %}disabled{% endif %}>
+                      <i class="bi bi-dash"></i>
+                    </button>
+                  </form>
+                  <span class="fw-bold px-2">{{ item.quantity }}</span>
+                  <form action="{% url 'cart:update_cart_item' item.id %}" method="post">
+                    {% csrf_token %}
+                    {% with max_stock=item.product.stock %}
+                    <button type="submit" name="quantity" value="{{ item.quantity|add:1 }}" class="qty-btn" {% if item.quantity >= max_quantity_per_item or max_stock is not None and item.quantity >= max_stock %}disabled{% endif %}>
+                      <i class="bi bi-plus"></i>
+                    </button>
+                    {% endwith %}
+                  </form>
+                </div>
+              </div>
+              <div class="col-md-2 text-md-end">
+                <span class="fw-bold">₹{{ item.total_price|floatformat:2 }}</span>
+                <div class="text-muted small">₹{{ item.unit_price|floatformat:2 }} each</div>
+              </div>
+              <div class="col-md-1 text-md-end">
+                <form action="{% url 'cart:remove_from_cart' item.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm text-danger border-0">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="col-lg-4">
+        <div class="summary-card p-4">
+          <h5 class="fw-bold mb-4">Order Summary</h5>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal ({{ cart.total_items }} items)</span>
+            <span class="fw-semibold">₹{{ cart.total_price|floatformat:2 }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3">
+            <span class="text-muted">Shipping</span>
+            <span class="text-success fw-semibold">Free</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between mb-4">
+            <span class="fw-bold fs-5">Total</span>
+            <span class="fw-bold fs-5">₹{{ cart.total_price|floatformat:2 }}</span>
+          </div>
+          <a href="{% url 'orders:checkout' %}" class="btn btn-primary btn-lg rounded-pill w-100 fw-semibold">
+            <i class="bi bi-credit-card me-2"></i> Proceed to Checkout
+          </a>
+          <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary rounded-pill w-100 mt-2">
+            <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-icon"><i class="bi bi-cart3"></i></div>
+      <h4>Your cart is empty</h4>
+      <p>Looks like you haven't added anything yet. Explore our collection and find something you love.</p>
+      <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg rounded-pill px-5">
+        <i class="bi bi-arrow-left me-2"></i> Start Shopping
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

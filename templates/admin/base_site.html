@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Zip Store Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}" style="color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+    <i class="bi bi-box-seam" style="font-size: 1.5rem;"></i>
+    <strong>Zip Store</strong> <span style="font-weight: 300; opacity: 0.8;">Admin</span>
+  </a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{% static 'admin/css/admin_custom.css' %}">
+{% endblock %}
+
+{% block welcome-msg %}
+<strong><i class="bi bi-person-circle"></i> {{ user.get_username }}</strong>
+{% endblock %}
+
+{% block userlinks %}
+<a href="{% url 'home' %}"><i class="bi bi-globe"></i> View Site</a> /
+{{ block.super }}
+{% endblock %}

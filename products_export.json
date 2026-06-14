@@ -1,0 +1,320 @@
+[
+{
+  "model": "products.category",
+  "pk": 1,
+  "fields": {
+    "name": "Health & Beauty",
+    "slug": "health-beauty",
+    "image": ""
+  }
+},
+{
+  "model": "products.category",
+  "pk": 2,
+  "fields": {
+    "name": "Baby Products",
+    "slug": "baby-products",
+    "image": "categories/category_baby.jpg"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "Anti-Snoring Lips Strip",
+    "slug": "anti-snoring-lips-strip",
+    "category": 2,
+    "description": "Premium anti-snoring lip strips designed to promote nasal breathing and reduce snoring. Comfortable and easy to use.",
+    "price": "50.00",
+    "discount_price": "40.00",
+    "sku": "ASLS-001",
+    "stock": 149,
+    "in_stock": true,
+    "image": "products/anti-snoring-lips-strip-1719059151_dHdJMt8.jpg",
+    "featured": true,
+    "active": true,
+    "created_at": "2026-05-28T13:45:04.395Z",
+    "updated_at": "2026-05-28T15:09:26.759Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "Earpick Flashlight Ear Cleaner",
+    "slug": "earpick-flashlight-ear-cleaner",
+    "category": 2,
+    "description": "Safe and gentle ear cleaning tool with built-in LED flashlight for visibility. Ergonomically designed for comfortable use.",
+    "price": "18.00",
+    "discount_price": "15.00",
+    "sku": "EPEC-001",
+    "stock": 199,
+    "in_stock": true,
+    "image": "products/Earpick-Flashlight-Ear-Cleaner-1653046204_wwxm4vD.jpg",
+    "featured": true,
+    "active": true,
+    "created_at": "2026-05-28T13:45:04.698Z",
+    "updated_at": "2026-05-28T15:08:28.514Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "Smile Baby Knee Pad",
+    "slug": "smile-baby-knee-pad",
+    "category": 2,
+    "description": "Soft and comfortable knee pads for babies learning to crawl. Provides protection and cushioning for little knees.",
+    "price": "25.00",
+    "discount_price": "23.00",
+    "sku": "SBKP-001",
+    "stock": 118,
+    "in_stock": true,
+    "image": "products/Smile-Baby-Knee-Pad-Knee-Cushi-1678874850_jiBF0s2.jpg",
+    "featured": true,
+    "active": true,
+    "created_at": "2026-05-28T13:45:04.864Z",
+    "updated_at": "2026-05-28T15:07:56.299Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "V-Shape Baby Safety Protection",
+    "slug": "v-shape-baby-safety-protection",
+    "category": 2,
+    "description": "V-shaped safety protection pad for babies. Helps prevent head injuries and provides comfortable support.",
+    "price": "12.00",
+    "discount_price": "10.00",
+    "sku": "VBSP-001",
+    "stock": 200,
+    "in_stock": true,
+    "image": "products/V-Shape-Baby-Safety-Protection3-1683199752_rG2S6Vv.jpg",
+    "featured": true,
+    "active": true,
+    "created_at": "2026-05-28T13:45:05.352Z",
+    "updated_at": "2026-05-28T15:07:31.185Z"
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 1,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip1-1719059151_IBi7Xvl.jpg",
+    "alt_text": "",
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 2,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip2-1719059151_PSn29yV.jpg",
+    "alt_text": "",
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 3,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip3-1719059151_j4paI2c.jpg",
+    "alt_text": "",
+    "sort_order": 3
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 4,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip4-1719059151_YN1cxN0.jpg",
+    "alt_text": "",
+    "sort_order": 4
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 5,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip5-1719059152_F9JNfZZ.jpg",
+    "alt_text": "",
+    "sort_order": 5
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 6,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip6-1719059152_a4qXD28.jpg",
+    "alt_text": "",
+    "sort_order": 6
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 7,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip7-1719059152_mG4pECF.jpg",
+    "alt_text": "",
+    "sort_order": 7
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 8,
+  "fields": {
+    "product": 1,
+    "image": "products/anti-snoring-lips-strip8-1719059152_y7S3iV2.jpg",
+    "alt_text": "",
+    "sort_order": 8
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 9,
+  "fields": {
+    "product": 2,
+    "image": "products/Earpick-Flashlight-Ear-Cleaner1-1653046204_zULOWGf.jpg",
+    "alt_text": "",
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 10,
+  "fields": {
+    "product": 2,
+    "image": "products/Earpick-Flashlight-Ear-Cleaner2-1653046204_t5opXpN.jpg",
+    "alt_text": "",
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 11,
+  "fields": {
+    "product": 2,
+    "image": "products/Earpick-Flashlight-Ear-Cleaner3-1653046205_17Et2nr.jpg",
+    "alt_text": "",
+    "sort_order": 3
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 12,
+  "fields": {
+    "product": 2,
+    "image": "products/Earpick-Flashlight-Ear-Cleaner5-1653046205_ZVQN8YT.jpg",
+    "alt_text": "",
+    "sort_order": 4
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 13,
+  "fields": {
+    "product": 2,
+    "image": "products/Earpick-Flashlight-Ear-Cleaner6-1653046206_2yqiunw.jpg",
+    "alt_text": "",
+    "sort_order": 5
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 14,
+  "fields": {
+    "product": 3,
+    "image": "products/Smile-Baby-Knee-Pad-Knee-Cushi1-1678874850_nS0ZPzv.jpg",
+    "alt_text": "",
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 15,
+  "fields": {
+    "product": 3,
+    "image": "products/Smile-Baby-Knee-Pad-Knee-Cushi2-1678874850_8dfD4in.jpg",
+    "alt_text": "",
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 16,
+  "fields": {
+    "product": 3,
+    "image": "products/Smile-Baby-Knee-Pad-Knee-Cushi3-1678874851_fd0u99q.jpg",
+    "alt_text": "",
+    "sort_order": 3
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 17,
+  "fields": {
+    "product": 3,
+    "image": "products/Smile-Baby-Knee-Pad-Knee-Cushi4-1678874851_B9tLPt9.jpg",
+    "alt_text": "",
+    "sort_order": 4
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 18,
+  "fields": {
+    "product": 4,
+    "image": "products/V-Shape-Baby-Safety-Protection1-1683199751_3QJ24PG.jpg",
+    "alt_text": "",
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 19,
+  "fields": {
+    "product": 4,
+    "image": "products/V-Shape-Baby-Safety-Protection2-1683199752_ubRaYpx.jpg",
+    "alt_text": "",
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 20,
+  "fields": {
+    "product": 4,
+    "image": "products/V-Shape-Baby-Safety-Protection4-1683199753_b87X0CW.jpg",
+    "alt_text": "",
+    "sort_order": 3
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 21,
+  "fields": {
+    "product": 4,
+    "image": "products/V-Shape-Baby-Safety-Protection5-1683199753_UZThF84.jpg",
+    "alt_text": "",
+    "sort_order": 4
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 22,
+  "fields": {
+    "product": 4,
+    "image": "products/V-Shape-Baby-Safety-Protection6-1683199754_LR7YH2s.jpg",
+    "alt_text": "",
+    "sort_order": 5
+  }
+}
+]

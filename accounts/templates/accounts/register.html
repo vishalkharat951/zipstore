@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="auth-card">
+          <div class="card-body">
+            <a href="{% url 'home' %}" class="auth-brand d-block text-center mb-4">
+              <i class="bi bi-box-seam"></i> Zip Store
+            </a>
+            <h4 class="text-center fw-bold mb-1">Create Account</h4>
+            <p class="text-center text-muted small mb-4">Join us and start shopping</p>
+            <form method="post" class="form-premium">
+              {% csrf_token %}
+              {% for field in form %}
+                <div class="mb-3">
+                  {{ field.label_tag }}
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              <button type="submit" class="btn btn-primary w-100 rounded-pill fw-semibold py-2">Register</button>
+            </form>
+            <p class="text-center text-muted mt-4 mb-0 small">
+              Already have an account? <a href="{% url 'accounts:login' %}" class="fw-semibold">Log in</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

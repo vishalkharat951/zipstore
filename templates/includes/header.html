@@ -1,0 +1,56 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-premium sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <i class="bi bi-box-seam"></i> Zip Store
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'products:product_list' %}">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'products:category_list' %}">Categories</a></li>
+      </ul>
+      <form class="d-flex me-3 search-form" action="{% url 'products:product_search' %}" method="get">
+        <div class="input-group">
+          <input class="form-control form-control-sm border-0 bg-white bg-opacity-10 text-white" type="search" name="q" placeholder="Search products..." aria-label="Search" style="caret-color: #fff;">
+          <button class="btn btn-sm text-white" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+      </form>
+      <ul class="navbar-nav align-items-center gap-1">
+        <li class="nav-item">
+          <a class="nav-link position-relative d-flex align-items-center gap-1" href="{% url 'cart:cart_detail' %}">
+            <i class="bi bi-cart3 fs-5"></i>
+            {% if cart_items_count > 0 %}
+              <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="font-size: 0.65rem;">
+                {{ cart_items_count }}
+              </span>
+            {% endif %}
+          </a>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle fs-5"></i>
+              <span class="d-none d-lg-inline">{{ user.username|truncatechars:12 }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+              <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-person me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'orders:order_list' %}"><i class="bi bi-box me-2"></i>Orders</a></li>
+              <li><a class="dropdown-item" href="{% url 'accounts:address_list' %}"><i class="bi bi-geo-alt me-2"></i>Addresses</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Log Out</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Log In</a></li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-primary btn-sm text-white px-3 rounded-pill" href="{% url 'accounts:register' %}">Sign Up</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}UPI Payment{% endblock %}
+
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card-premium p-4 text-center">
+        <div class="mb-3">
+          <div class="display-4 text-primary">
+            <i class="bi bi-phone"></i>
+          </div>
+          <h2 class="fw-bold mt-3">UPI Payment</h2>
+          <p class="text-muted">Scan the QR code or tap the button below to pay</p>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4 mx-auto" style="max-width: 360px;">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Order</span>
+              <span class="fw-bold">{{ order.order_id }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Payee</span>
+              <span class="fw-bold">Zip Store</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">UPI ID</span>
+              <span class="fw-bold">8669303401@ybl</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Amount</span>
+              <span class="fw-bold fs-5 text-primary">₹{{ order.total_amount|floatformat:2 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <img src="{{ qr_data_uri }}" alt="UPI QR Code"
+               class="img-fluid border rounded-3 p-2 bg-white shadow-sm"
+               style="max-width: 280px; width: 100%;"
+               id="upi-qr">
+          <p class="text-muted small mt-2">
+            <i class="bi bi-camera me-1"></i>Scan with any UPI app
+          </p>
+        </div>
+
+        <a href="{{ upi_url }}"
+           class="btn btn-primary btn-lg rounded-pill w-100 fw-semibold mb-3"
+           id="upi-pay-button"
+           onclick="trackUPIClick()">
+          <i class="bi bi-phone me-2"></i> Pay ₹{{ order.total_amount|floatformat:2 }} via UPI
+        </a>
+
+        <div class="d-flex gap-2 justify-content-center mb-4">
+          <span class="badge bg-light text-dark p-2 border rounded-3">
+            <i class="bi bi-google me-1"></i>GPay
+          </span>
+          <span class="badge bg-light text-dark p-2 border rounded-3">
+            <i class="bi bi-phone me-1"></i>PhonePe
+          </span>
+          <span class="badge bg-light text-dark p-2 border rounded-3">
+            <i class="bi bi-phone me-1"></i>Paytm
+          </span>
+          <span class="badge bg-light text-dark p-2 border rounded-3">
+            <i class="bi bi-phone me-1"></i>BHIM
+          </span>
+        </div>
+
+        <div class="alert alert-info border-0 rounded-3 text-start" role="alert">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>After payment:</strong> Once you have completed the payment in your UPI app,
+          click the button below to return to your order. Your order will be marked as
+          <strong>"Payment Pending"</strong> until confirmed by the store.
+        </div>
+
+        <form method="post" action="{% url 'payments:upi_payment' order.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-success btn-lg rounded-pill w-100 fw-semibold">
+            <i class="bi bi-check-circle me-2"></i> I've Completed the Payment
+          </button>
+        </form>
+
+        <div class="mt-3">
+          <a href="{% url 'orders:order_detail' order.id %}" class="text-decoration-none small">
+            <i class="bi bi-arrow-left me-1"></i> Back to Order
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function trackUPIClick() {
+  var btn = document.getElementById('upi-pay-button');
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Opening UPI app...';
+  btn.classList.remove('btn-primary');
+  btn.classList.add('btn-success');
+}
+</script>
+{% endblock %}

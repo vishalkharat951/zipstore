@@ -1,0 +1,57 @@
+{% load static %}
+<footer class="footer-premium">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5 class="d-flex align-items-center gap-2"><i class="bi bi-box-seam"></i> Zip Store</h5>
+        <p class="small" style="color: rgba(255,255,255,0.5);">
+          Premium quality products at unbeatable prices. We curate the best from around the world, so you don't have to.
+        </p>
+        <div class="d-flex gap-2 mt-3">
+          <a href="#" class="btn btn-sm btn-outline-light rounded-circle" style="width:38px;height:38px;"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="btn btn-sm btn-outline-light rounded-circle" style="width:38px;height:38px;"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="btn btn-sm btn-outline-light rounded-circle" style="width:38px;height:38px;"><i class="bi bi-facebook"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Shop</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="{% url 'products:product_list' %}">All Products</a></li>
+          <li class="mb-2"><a href="{% url 'products:category_list' %}">Categories</a></li>
+          <li class="mb-2"><a href="{% url 'products:product_search' %}">Search</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Account</h5>
+        <ul class="list-unstyled">
+          {% if user.is_authenticated %}
+            <li class="mb-2"><a href="{% url 'management_portal' %}">Management</a></li>
+            <li class="mb-2"><a href="{% url 'accounts:profile' %}">Profile</a></li>
+            <li class="mb-2"><a href="{% url 'orders:order_list' %}">Orders</a></li>
+            <li class="mb-2"><a href="{% url 'cart:cart_detail' %}">Cart</a></li>
+          {% else %}
+            <li class="mb-2"><a href="{% url 'accounts:login' %}">Log In</a></li>
+            <li class="mb-2"><a href="{% url 'accounts:register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h5>Newsletter</h5>
+        <p class="small" style="color: rgba(255,255,255,0.5);">Get updates on new arrivals and exclusive offers.</p>
+        <form class="d-flex gap-2">
+          <input type="email" class="form-control form-control-sm bg-transparent text-white border-secondary" placeholder="Your email" style="font-size:0.85rem;">
+          <button class="btn btn-primary btn-sm px-3 rounded-pill" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <p class="small mb-0">&copy; {% now "Y" %} Zip Store. All rights reserved.</p>
+      <div class="d-flex gap-3 small">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Shipping Info</a>
+      </div>
+    </div>
+  </div>
+</footer>

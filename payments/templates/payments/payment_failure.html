@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Failed{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center py-5">
+    <div class="mb-4">
+      <div class="display-1 text-danger">
+        <i class="bi bi-x-circle-fill"></i>
+      </div>
+    </div>
+    <h1 class="fw-bold mb-3">Payment Failed</h1>
+    <p class="text-muted mb-4">
+      Your payment for order <strong>{{ order.order_id }}</strong> could not be processed.
+      Please try again or use a different payment method.
+    </p>
+    <a href="{% url 'payments:initiate_payment' order.id %}" class="btn btn-primary btn-lg">
+      <i class="bi bi-arrow-repeat"></i> Try Again
+    </a>
+    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-outline-secondary btn-lg ms-2">
+      View Order
+    </a>
+  </div>
+</div>
+{% endblock %}

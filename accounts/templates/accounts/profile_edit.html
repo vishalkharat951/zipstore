@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="section-header">
+    <div>
+      <h1 class="section-title">Edit Profile</h1>
+      <p class="section-subtitle">Update your personal information</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <div class="list-group list-group-flush sidebar-card p-2">
+        <a href="{% url 'accounts:profile' %}" class="list-group-item rounded-3">Profile</a>
+        <a href="{% url 'orders:order_list' %}" class="list-group-item rounded-3">Orders</a>
+        <a href="{% url 'accounts:address_list' %}" class="list-group-item rounded-3">Addresses</a>
+        <a href="{% url 'accounts:password_change' %}" class="list-group-item rounded-3">Password</a>
+        <a href="{% url 'accounts:logout' %}" class="list-group-item text-danger rounded-3">Log Out</a>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <div class="card-premium p-4 mb-4">
+        <h5 class="fw-bold mb-4">Profile Information</h5>
+        <form method="post" enctype="multipart/form-data" class="form-premium">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              {{ field.label_tag }}
+              {{ field }}
+              {% if field.errors %}
+                <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary rounded-pill px-4">Save Changes</button>
+            <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-premium p-4">
+        <h5 class="fw-bold mb-4">Email Address</h5>
+        <form method="post" action="{% url 'accounts:profile_email' %}" class="form-premium">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ request.user.email }}" required>
+          </div>
+          <button type="submit" class="btn btn-primary rounded-pill px-4">Update Email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

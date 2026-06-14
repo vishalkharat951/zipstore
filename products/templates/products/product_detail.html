@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="breadcrumb-premium">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Shop</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'products:product_list_by_category' category_slug=product.category.slug %}">{{ product.category.name }}</a></li>
+      <li class="breadcrumb-item active">{{ product.name|truncatechars:30 }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <div class="col-lg-6">
+      <div class="card-premium">
+        <div style="aspect-ratio:1;overflow:hidden;cursor:pointer;">
+          <img id="mainProductImage"
+               src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/placeholder.svg' %}{% endif %}"
+               class="w-100 h-100" style="object-fit:cover;transition:opacity 0.3s;"
+               alt="{{ product.name }}">
+        </div>
+      </div>
+      {% with images=product.images.all %}
+        {% if images %}
+          <div class="d-flex gap-2 mt-3 flex-wrap">
+            {% if product.image %}
+              <div class="product-thumb selected" data-src="{{ product.image.url }}" style="width:64px;height:64px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid #0d6efd;">
+                <img src="{{ product.image.url }}" class="w-100 h-100" style="object-fit:cover;">
+              </div>
+            {% endif %}
+            {% for img in images %}
+              <div class="product-thumb" data-src="{{ img.image.url }}" style="width:64px;height:64px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;">
+                <img src="{{ img.image.url }}" class="w-100 h-100" style="object-fit:cover;">
+              </div>
+            {% endfor %}
+          </div>
+        {% elif product.image %}
+          <div class="d-flex gap-2 mt-3 flex-wrap">
+            <div class="product-thumb selected" data-src="{{ product.image.url }}" style="width:64px;height:64px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid #0d6efd;">
+              <img src="{{ product.image.url }}" class="w-100 h-100" style="object-fit:cover;">
+            </div>
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="col-lg-6">
+      <p class="text-uppercase small fw-semibold text-muted mb-2" style="letter-spacing:1px;">{{ product.category.name }}</p>
+      <h1 class="fw-bold mb-3" style="font-size:2rem;letter-spacing:-0.5px;">{{ product.name }}</h1>
+
+      <div class="mb-4">
+        {% if product.discount_price %}
+          <span class="price-original fs-4">₹{{ product.price }}</span>
+          <span class="price-sale ms-2 fs-2">₹{{ product.discount_price }}</span>
+        {% else %}
+          <span class="price-current fs-2">₹{{ product.price }}</span>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-semibold mb-2">Description</h6>
+        <p class="text-muted" style="line-height:1.7;">{{ product.description|linebreaks }}</p>
+      </div>
+
+      <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-3" style="background:#f8f9fa;">
+        <i class="bi {% if product.in_stock %}bi-check-circle-fill text-success{% else %}bi-x-circle-fill text-danger{% endif %} fs-5"></i>
+        <div>
+          <span class="fw-semibold">Availability:</span>
+          {% if product.in_stock %}
+            <span class="text-success ms-1">In Stock{% if product.stock %} ({{ product.stock }} available){% endif %}</span>
+          {% else %}
+            <span class="text-danger ms-1">Out of Stock</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-primary btn-lg rounded-pill w-100 fw-semibold {% if not product.in_stock %}disabled{% endif %}">
+          <i class="bi bi-cart-plus me-2"></i> Add to Cart
+          {% if product.discount_price %}
+            — ₹{{ product.discount_price }}
+          {% else %}
+            — ₹{{ product.price }}
+          {% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {% if related_products %}
+    <section class="mt-5 pt-5 border-top">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">You May Also Like</h2>
+          <p class="section-subtitle">More from {{ product.category.name }}</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        {% for related in related_products %}
+          <div class="col-6 col-md-4 col-lg-3">
+            {% include 'includes/product_card.html' with product=related %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.product-thumb').forEach(function(el) {
+  el.addEventListener('click', function() {
+    document.querySelectorAll('.product-thumb').forEach(function(t) {
+      t.style.borderColor = 'transparent';
+      t.classList.remove('selected');
+    });
+    this.style.borderColor = '#0d6efd';
+    this.classList.add('selected');
+    var main = document.getElementById('mainProductImage');
+    main.style.opacity = '0.4';
+    setTimeout(function() {
+      main.src = el.getAttribute('data-src');
+      main.style.opacity = '1';
+    }, 150);
+  });
+});
+</script>
+{% endblock %}

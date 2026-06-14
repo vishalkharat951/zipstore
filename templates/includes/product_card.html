@@ -1,0 +1,44 @@
+{% load static %}
+<div class="card-premium">
+  <div class="product-img-wrapper">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+    {% else %}
+      <img src="{% static 'images/placeholder.svg' %}" class="product-img" alt="{{ product.name }}">
+    {% endif %}
+    {% if product.discount_price %}
+      <span class="product-badge">Sale</span>
+    {% endif %}
+    {% if not product.in_stock %}
+      <span class="product-badge" style="background:#6c757d;">Out of Stock</span>
+    {% endif %}
+    <div class="product-actions">
+      <form action="{% url 'cart:add_to_cart' product.id %}" method="post" style="position:relative;z-index:3;">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn-icon" title="Add to Cart" {% if not product.in_stock %}disabled{% endif %}>
+          <i class="bi bi-cart-plus"></i>
+        </button>
+      </form>
+      <a href="{% url 'products:product_detail' category_slug=product.category.slug slug=product.slug %}" class="btn-icon" title="View Details" style="position:relative;z-index:3;">
+        <i class="bi bi-eye"></i>
+      </a>
+    </div>
+  </div>
+  <div class="p-3">
+    <p class="text-premium-muted mb-1 text-uppercase" style="font-size:0.7rem;letter-spacing:0.5px;">{{ product.category.name }}</p>
+    <h6 class="fw-semibold mb-2" style="line-height:1.3;">
+      <a href="{% url 'products:product_detail' category_slug=product.category.slug slug=product.slug %}" class="text-decoration-none text-dark stretched-link">
+        {{ product.name }}
+      </a>
+    </h6>
+    <div>
+      {% if product.discount_price %}
+        <span class="price-original">₹{{ product.price }}</span>
+        <span class="price-sale ms-1" style="font-size:1.1rem;">₹{{ product.discount_price }}</span>
+      {% else %}
+        <span class="fw-bold fs-6">₹{{ product.price }}</span>
+      {% endif %}
+    </div>
+  </div>
+</div>

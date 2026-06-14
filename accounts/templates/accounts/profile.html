@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="section-header">
+    <div>
+      <h1 class="section-title">My Profile</h1>
+      <p class="section-subtitle">Manage your account settings</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <div class="sidebar-card p-4 text-center">
+        <div class="mb-3">
+          {% if profile and profile.avatar %}
+            <img src="{{ profile.avatar.url }}" class="rounded-circle" width="96" height="96" style="object-fit:cover;">
+          {% else %}
+            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center" style="width:96px;height:96px;">
+              <i class="bi bi-person display-5 text-muted"></i>
+            </div>
+          {% endif %}
+        </div>
+        <h5 class="fw-bold">{{ profile_user.username }}</h5>
+        <p class="text-muted small">{{ profile_user.email }}</p>
+        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-outline-primary rounded-pill btn-sm w-100">
+          <i class="bi bi-pencil me-1"></i> Edit Profile
+        </a>
+      </div>
+      <div class="list-group list-group-flush sidebar-card mt-3 p-2">
+        <a href="{% url 'accounts:profile' %}" class="list-group-item active rounded-3">Profile</a>
+        <a href="{% url 'orders:order_list' %}" class="list-group-item rounded-3">Orders</a>
+        <a href="{% url 'accounts:address_list' %}" class="list-group-item rounded-3">Addresses</a>
+        <a href="{% url 'accounts:password_change' %}" class="list-group-item rounded-3">Password</a>
+        <a href="{% url 'accounts:logout' %}" class="list-group-item text-danger rounded-3">Log Out</a>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <div class="card-premium p-4">
+        <h5 class="fw-bold mb-4">Account Details</h5>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="text-muted small text-uppercase" style="letter-spacing:0.5px;">Username</label>
+            <p class="fw-semibold mb-0">{{ profile_user.username }}</p>
+          </div>
+          <div class="col-sm-6">
+            <label class="text-muted small text-uppercase" style="letter-spacing:0.5px;">Email</label>
+            <p class="fw-semibold mb-0">{{ profile_user.email }}</p>
+          </div>
+          {% if profile %}
+            <div class="col-sm-6">
+              <label class="text-muted small text-uppercase" style="letter-spacing:0.5px;">Phone</label>
+              <p class="fw-semibold mb-0">{{ profile.phone|default:"—" }}</p>
+            </div>
+            <div class="col-sm-6">
+              <label class="text-muted small text-uppercase" style="letter-spacing:0.5px;">Date of Birth</label>
+              <p class="fw-semibold mb-0">{{ profile.date_of_birth|date:"F j, Y"|default:"—" }}</p>
+            </div>
+          {% endif %}
+          <div class="col-sm-6">
+            <label class="text-muted small text-uppercase" style="letter-spacing:0.5px;">Member Since</label>
+            <p class="fw-semibold mb-0">{{ profile_user.date_joined|date:"F j, Y" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
