@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
 <link rel="preconnect" href="https://placehold.co">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="css/global.css">
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" defer></script>
 </head>
 <body>
 <nav class="navbar">
@@ -181,7 +182,7 @@ ${items.map(item => `
           }
           const upiData = await upiRes.json();
           Cart.clear();
-          checkoutView.innerHTML = \`
+          const upiHtml = `
             <div style="text-align:center;padding:var(--space-6) 0">
               <div style="font-size:2.5rem;margin-bottom:var(--space-3)">📱</div>
               <h2 style="margin-bottom:var(--space-2)">UPI Payment</h2>
@@ -190,18 +191,18 @@ ${items.map(item => `
               <div style="background:#f8f9fa;border-radius:12px;padding:var(--space-4);margin-bottom:var(--space-4);display:inline-block">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);margin-bottom:var(--space-3);font-size:0.9em">
                   <span style="text-align:left;color:var(--color-muted)">Amount</span>
-                  <span style="text-align:right;font-weight:700;font-size:1.2em">₹${upiData.amount.toFixed(2)}</span>
+                  <span style="text-align:right;font-weight:700;font-size:1.2em">₹` + upiData.amount.toFixed(2) + `</span>
                   <span style="text-align:left;color:var(--color-muted)">Payee</span>
-                  <span style="text-align:right;font-weight:600">${upiData.merchantName}</span>
+                  <span style="text-align:right;font-weight:600">` + upiData.merchantName + `</span>
                   <span style="text-align:left;color:var(--color-muted)">UPI ID</span>
-                  <span style="text-align:right;font-weight:600">${upiData.upiId}</span>
+                  <span style="text-align:right;font-weight:600">` + upiData.upiId + `</span>
                 </div>
                 <div id="upi-qr-container" style="background:#fff;border-radius:8px;padding:var(--space-3);display:inline-block"></div>
               </div>
 
               <div style="margin-bottom:var(--space-4)">
-                <a href="${upiData.upiUrl}" style="display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-primary);color:#fff;padding:14px 28px;border-radius:50px;font-size:1.05em;font-weight:600;text-decoration:none" id="upi-pay-link" onclick="this.textContent='Opening UPI app...';this.style.opacity='0.7'">
-                  <span>💳</span> Pay ₹${upiData.amount.toFixed(2)} via UPI
+                <a href="` + upiData.upiUrl + `" style="display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-primary);color:#fff;padding:14px 28px;border-radius:50px;font-size:1.05em;font-weight:600;text-decoration:none" id="upi-pay-link" onclick="this.textContent='Opening UPI app...';this.style.opacity='0.7'">
+                  <span>💳</span> Pay ₹` + upiData.amount.toFixed(2) + ` via UPI
                 </a>
               </div>
 
@@ -221,12 +222,13 @@ ${items.map(item => `
               </a>
               <p style="margin-top:var(--space-3)"><a href="my-orders.html" style="font-size:0.85em">View My Orders</a></p>
             </div>
-          \`;
+          `;
+          checkoutView.innerHTML = upiHtml;
           setTimeout(() => {
             const container = document.getElementById('upi-qr-container');
             if (container && typeof QRCode !== 'undefined') {
               new QRCode(container, {
-                text: '${upiData.upiUrl}',
+                text: '` + upiData.upiUrl + `',
                 width: 220,
                 height: 220,
                 colorDark: '#000',
@@ -266,7 +268,7 @@ ${items.map(item => `
         }
         const payment = await payRes.json();
         Cart.clear();
-        checkoutView.innerHTML = \`
+        checkoutView.innerHTML = `
           <div class="cart-empty">
             <h2>Order Confirmed!</h2>
             <p>Your order (ID: ${orderId}) has been placed successfully.</p>
@@ -274,7 +276,7 @@ ${items.map(item => `
             <p style="margin-top:var(--space-4)"><a href="my-orders.html" class="btn btn-secondary">View My Orders</a></p>
             <a href="shop.html" class="btn btn-outline-dark" style="margin-top:var(--space-3)">Continue Shopping</a>
           </div>
-        \`;
+        `;
       } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Place Order — ₹' + total.toFixed(2);
