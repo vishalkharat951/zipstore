@@ -1,12 +1,63 @@
 const API_BASE_URL = 'https://zip-backend-myp0.onrender.com/api';
 
 const _inflight = new Map();
-async function apiGet(url, opts) {
-  const key = url + (opts ? JSON.stringify(opts) : '');
+const _dataCache = new Map();
+const CACHE_TTL = 30000;
+const PERSIST_TTL = 5 * 60 * 1000;
+
+function persistKey(url) {
+  return 'zipstore_cache_' + url;
+}
+
+function persistRead(url) {
+  try {
+    const raw = localStorage.getItem(persistKey(url));
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function persistWrite(url, data) {
+  try {
+    localStorage.setItem(persistKey(url), JSON.stringify({ data, ts: Date.now() }));
+  } catch {}
+}
+
+function fetchFresh(key, url, opts) {
   if (_inflight.has(key)) return _inflight.get(key);
-  const p = fetch(url, opts).then(r => { _inflight.delete(key); if (!r.ok) throw new Error('API error'); return r.json(); }).catch(e => { _inflight.delete(key); throw e; });
+  const p = fetch(url, opts)
+    .then(r => { _inflight.delete(key); if (!r.ok) throw new Error('API error'); return r.json(); })
+    .then(data => {
+      _dataCache.set(key, { data, ts: Date.now() });
+      persistWrite(url, data);
+      return data;
+    })
+    .catch(e => { _inflight.delete(key); throw e; });
   _inflight.set(key, p);
   return p;
+}
+
+async function apiGet(url, opts) {
+  const key = url + (opts ? JSON.stringify(opts) : '');
+
+  if (_inflight.has(key)) {
+    try { await _inflight.get(key); } catch {}
+  }
+
+  if (_dataCache.has(key)) {
+    const entry = _dataCache.get(key);
+    if (Date.now() - entry.ts < CACHE_TTL) return entry.data;
+    _dataCache.delete(key);
+  }
+
+  const persisted = persistRead(url);
+  if (persisted && persisted.data) {
+    _dataCache.set(key, { data: persisted.data, ts: Date.now() });
+    if (Date.now() - persisted.ts < PERSIST_TTL) return persisted.data;
+    fetchFresh(key, url, opts).catch(() => {});
+    return persisted.data;
+  }
+
+  return fetchFresh(key, url, opts);
 }
 
 document.addEventListener('click', e => {

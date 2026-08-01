@@ -110,6 +110,25 @@ exports.updateOrderStatus = async (req, res, next) => {
   }
 };
 
+exports.getGuestOrders = async (req, res, next) => {
+  try {
+    const { ids } = req.query;
+    if (!ids) {
+      return res.status(400).json({ error: 'Order IDs are required' });
+    }
+    const idArray = ids.split(',').map(id => id.trim()).filter(Boolean);
+    if (!idArray.length) {
+      return res.json({ count: 0, orders: [] });
+    }
+    const orders = await Order.find({ _id: { $in: idArray } })
+      .populate('items.productId', 'title price images')
+      .sort('-createdAt');
+    res.json({ count: orders.length, orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.deleteOrder = async (req, res, next) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);

@@ -115,5 +115,6 @@ grid.innerHTML = '<p class="error-message">Failed to load products. Make sure th
 categoryFilter.addEventListener('change', renderProducts);
 searchInput.addEventListener('input', renderProducts);
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
 </body>
 </html>

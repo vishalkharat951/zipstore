@@ -57,31 +57,41 @@ async function loadOrders() {
 const view = document.getElementById('orders-view');
 const loading = document.getElementById('loading');
 const token = localStorage.getItem('zipstore_token');
-if (!token) {
+const guestOrders = JSON.parse(localStorage.getItem('zipstore_guest_orders') || '[]');
+
+if (!token && !guestOrders.length) {
 loading.style.display = 'none';
 view.innerHTML = `
 <div class="cart-empty">
-<h2>Please Log In</h2>
-<p>You need to log in to view your orders.</p>
-<a href="login.html" class="btn btn-secondary" style="margin-top:var(--space-4)">Log In</a>
+<h2>No Orders Yet</h2>
+<p>Place an order to see it here. Your recent guest orders will appear automatically.</p>
+<a href="shop.html" class="btn btn-secondary" style="margin-top:var(--space-4)">Start Shopping</a>
 </div>
 `;
 return;
 }
 try {
+let orders = [];
+if (token) {
 const res = await fetch(API_BASE_URL + '/orders/my', {
 headers: { Authorization: 'Bearer ' + token },
 });
-if (!res.ok) {
-if (res.status === 401) {
-localStorage.removeItem('zipstore_token');
-window.location.href = 'login.html';
-return;
-}
-throw new Error('Failed to load orders');
-}
+if (res.ok) {
 const data = await res.json();
-const orders = data.orders || data;
+orders = data.orders || data;
+} else if (res.status === 401) {
+localStorage.removeItem('zipstore_token');
+localStorage.removeItem('zipstore_user');
+}
+}
+if (!orders.length && guestOrders.length) {
+const idsParam = guestOrders.join(',');
+const res = await fetch(API_BASE_URL + '/orders/guest?ids=' + encodeURIComponent(idsParam));
+if (res.ok) {
+const data = await res.json();
+orders = data.orders || data;
+}
+}
 loading.style.display = 'none';
 const params = new URLSearchParams(window.location.search);
 const paymentStatus = params.get('payment');
@@ -178,5 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
 loadOrders();
 });
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
 </body>
 </html>

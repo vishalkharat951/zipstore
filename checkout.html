@@ -135,22 +135,26 @@ ${items.map(item => `
         city: document.getElementById('city').value,
         state: document.getElementById('state').value,
       };
-      let token = localStorage.getItem('zipstore_token');
-      if (!token) {
-        const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      const authHeaders = () => {
+        const t = localStorage.getItem('zipstore_token');
+        return t ? { Authorization: `Bearer ${t}` } : {};
+      };
+      const registerGuest = async () => {
+        const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
         const regRes = await fetch(API_BASE_URL + '/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: 'Guest', email: guestId + '@zipstore.app', password: guestId }),
         });
-        if (regRes.ok) {
-          const regText = await regRes.text();
-          let regData;
-          try { regData = JSON.parse(regText); } catch { regData = {}; }
-          token = regData.token;
-          localStorage.setItem('zipstore_token', token);
+        if (!regRes.ok) return null;
+        let regData = null;
+        try { regData = await regRes.json(); } catch {}
+        if (regData && regData.token) {
+          localStorage.setItem('zipstore_token', regData.token);
+          return regData.token;
         }
-      }
+        return null;
+      };
       const orderBody = {
         items: items.map(i => ({ productId: i.productId, quantity: i.quantity })),
         shippingAddress,
@@ -158,12 +162,26 @@ ${items.map(item => `
       const btn = document.getElementById('place-order-btn');
       btn.disabled = true;
       btn.textContent = 'Processing...';
-      try {
+      const createOrder = async () => {
         const orderRes = await fetch(`${API_BASE_URL}/orders`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
           body: JSON.stringify(orderBody),
         });
+        if (orderRes.status === 401) {
+          localStorage.removeItem('zipstore_token');
+          const newToken = await registerGuest();
+          if (!newToken) return orderRes;
+          return fetch(`${API_BASE_URL}/orders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
+            body: JSON.stringify(orderBody),
+          });
+        }
+        return orderRes;
+      };
+      try {
+        const orderRes = await createOrder();
         const orderBodyText = await orderRes.text();
         if (!orderRes.ok) {
           let errMsg;
@@ -173,12 +191,15 @@ ${items.map(item => `
         let order;
         try { order = JSON.parse(orderBodyText); } catch { throw new Error('Server returned invalid response'); }
         const orderId = order.order._id || order.order.id;
+        const guestOrders = JSON.parse(localStorage.getItem('zipstore_guest_orders') || '[]');
+        if (guestOrders.indexOf(orderId) === -1) guestOrders.push(orderId);
+        localStorage.setItem('zipstore_guest_orders', JSON.stringify(guestOrders));
         const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
         if (paymentMethod === 'upi') {
           const upiRes = await fetch(`${API_BASE_URL}/payments/upi-initiate`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify({ orderId }),
           });
           const upiText = await upiRes.text();
@@ -251,7 +272,7 @@ ${items.map(item => `
         if (paymentMethod === 'phonepe') {
           const ppRes = await fetch(`${API_BASE_URL}/payments/phonepe-initiate`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify({ orderId }),
           });
           const ppText = await ppRes.text();
@@ -271,7 +292,7 @@ ${items.map(item => `
         }
         const payRes = await fetch(`${API_BASE_URL}/payments/checkout-mock`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          headers: { 'Content-Type': 'application/json', ...authHeaders() },
           body: JSON.stringify({ orderId }),
         });
         const payText = await payRes.text();
@@ -301,5 +322,6 @@ ${items.map(item => `
 }
 renderCheckout();
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
 </body>
 </html>

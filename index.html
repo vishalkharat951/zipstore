@@ -84,5 +84,6 @@ categorySections.innerHTML = entries.map(([catName, catProducts]) => `
 categorySections.innerHTML = '<div class="container"><p class="error-message">Failed to load products. Make sure the API is running.</p></div>';
 });
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
 </body>
 </html>
