@@ -4,6 +4,7 @@ const _inflight = new Map();
 const _dataCache = new Map();
 const CACHE_TTL = 30000;
 const PERSIST_TTL = 5 * 60 * 1000;
+const PERSIST_MAX = 100 * 1024;
 
 function persistKey(url) {
   return 'zipstore_cache_' + url;
@@ -16,9 +17,38 @@ function persistRead(url) {
   } catch { return null; }
 }
 
+function isDataUri(v) {
+  return typeof v === 'string' && v.indexOf('data:') === 0;
+}
+
 function persistWrite(url, data) {
   try {
-    localStorage.setItem(persistKey(url), JSON.stringify({ data, ts: Date.now() }));
+    const json = JSON.stringify({ data, ts: Date.now() });
+    if (json.length > PERSIST_MAX) return;
+    localStorage.setItem(persistKey(url), json);
+  } catch {}
+}
+
+function evictCacheEntries() {
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf('zipstore_cache_') === 0) {
+        localStorage.removeItem(k);
+      }
+    }
+  } catch {}
+}
+
+function cleanupOversizedCache() {
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf('zipstore_cache_') === 0) {
+        const raw = localStorage.getItem(k);
+        if (raw && raw.length > PERSIST_MAX) localStorage.removeItem(k);
+      }
+    }
   } catch {}
 }
 
@@ -77,7 +107,14 @@ const Cart = {
   },
 
   save(items) {
-    localStorage.setItem(this._key, JSON.stringify(items));
+    try {
+      localStorage.setItem(this._key, JSON.stringify(items));
+    } catch (e) {
+      evictCacheEntries();
+      try {
+        localStorage.setItem(this._key, JSON.stringify(items));
+      } catch {}
+    }
     this._updateBadge();
     window.dispatchEvent(new CustomEvent('cart-updated', { detail: items }));
   },
@@ -89,11 +126,12 @@ const Cart = {
     if (existing) {
       existing.quantity += quantity;
     } else {
+      const rawImg = product.imageUrl || (product.images && product.images[0]) || '';
       items.push({
         productId: product._id || product.id,
         title: product.title,
         price: product.price,
-        imageUrl: product.imageUrl || (product.images && product.images[0]) || '',
+        imageUrl: isDataUri(rawImg) ? '' : rawImg,
         quantity,
       });
     }
@@ -156,6 +194,7 @@ const Cart = {
   },
 
   init() {
+    cleanupOversizedCache();
     this._updateBadge();
   },
 };

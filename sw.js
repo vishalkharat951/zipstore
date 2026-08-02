@@ -1,4 +1,4 @@
-const CACHE = 'zipstore-v3';
+const CACHE = 'zipstore-v4';
 const STATIC = [
   'css/global.css',
   'js/admin.js',
