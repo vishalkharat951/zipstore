@@ -1,0 +1,56 @@
+version: "3.8"
+
+# Oracle Cloud (OCI) production stack for ZipStore.
+# Target: Always Free ARM VM (Ampere A1, 4 OCPU / 24 GB RAM, Oracle Linux 8 / Ubuntu).
+# Architecture:
+#   - api     : Node.js/Express API (zipstore-backend)
+#   - mongo   : MongoDB 7 data store
+#   - nginx   : INSTALLED ON THE HOST (see deploy/oracle/nginx/zipstore.conf)
+#               terminates TLS and proxies 127.0.0.1:5000 -> api.
+#
+# Usage:
+#   docker compose -f docker-compose.oci.yml -p zipstore up -d --build
+#
+# NOTE: api is bound to 127.0.0.1 ONLY. Public traffic must come through
+# nginx (host). Do NOT publish api/mongo on 0.0.0.0.
+
+services:
+  api:
+    build: ./zipstore-backend
+    ports:
+      - "127.0.0.1:5000:5000"
+    env_file:
+      - ./zipstore-backend/.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:5000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    networks:
+      - zipstore
+
+  mongo:
+    image: mongo:7
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zipstore
+
+volumes:
+  mongo_data:
+
+networks:
+  zipstore:
+    driver: bridge
