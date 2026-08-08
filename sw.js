@@ -1,8 +1,12 @@
-const CACHE = 'zipstore-v4';
+const CACHE = 'zipstore-v7';
 const STATIC = [
   'css/global.css',
+  'css/loader.css',
   'js/admin.js',
   'js/cart.js',
+  'js/loader.js',
+  'assets/css/preloader.css',
+  'assets/js/preloader.js',
   'offline.html'
 ];
 const SHELL = [
@@ -13,7 +17,17 @@ const SHELL = [
   'my-orders.html',
   'product.html',
   'login.html',
-  'admin.html'
+  'admin.html',
+  'privacy-policy.html',
+  'terms.html',
+  'refund-policy.html',
+  'cancellation-policy.html',
+  'shipping-policy.html',
+  'contact.html',
+  'about.html',
+  'faq.html',
+  'support.html',
+  'track-order.html'
 ];
 
 self.addEventListener('install', e => {
@@ -44,7 +58,7 @@ self.addEventListener('fetch', e => {
   if (request.method !== 'GET') return;
 
   if (request.mode === 'navigate') {
-    e.respondWith(staleWhileRevalidate(request));
+    e.respondWith(networkFirst(request));
     return;
   }
 
@@ -61,6 +75,20 @@ self.addEventListener('fetch', e => {
 
   e.respondWith(staleWhileRevalidate(request));
 });
+
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE);
+  try {
+    const res = await fetch(request);
+    if (res.ok) cache.put(request, res.clone());
+    return res;
+  } catch {
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    if (request.mode === 'navigate') return caches.match('offline.html');
+    return new Response('Offline', { status: 503 });
+  }
+}
 
 async function cacheFirst(request) {
   const cached = await caches.match(request);
