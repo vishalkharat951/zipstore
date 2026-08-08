@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ZipStore Cancellation Policy — when and how you can cancel an order.">
+<title>Cancellation Policy — ZipStore</title>
+<link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
+<link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
+<link rel="preconnect" href="https://placehold.co">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/loader.css">
+</head>
+<body>
+<div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
+<div class="loader-inner">
+<div class="loader-logo-wrap">
+<div class="loader-spinner"></div>
+<div class="loader-logo">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+</div>
+</div>
+<div class="loader-name">ZipStore</div>
+<div class="loader-text">Preparing your shopping experience<span class="loader-dots"></span></div>
+<div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+</div>
+<nav class="navbar">
+<div class="container">
+<a href="index.html" class="navbar-brand">ZipStore</a>
+<ul class="navbar-links" id="navLinks">
+<li><a href="index.html">Home</a></li>
+<li><a href="shop.html">Shop</a></li>
+<li><a href="track-order.html">Track Order</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+<div class="navbar-actions">
+<a href="cart.html" class="cart-icon" aria-label="Shopping cart">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+<span class="cart-count">0</span>
+</a>
+<button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</div>
+</div>
+</nav>
+<div class="container" style="padding-top:var(--space-12);padding-bottom:var(--space-12);max-width:820px">
+<h1 style="font-size:var(--font-size-4xl);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-3)">Cancellation Policy</h1>
+<p style="color:var(--color-text-secondary);margin-bottom:var(--space-8)">Last updated: 05 August 2026</p>
+
+<h2>1. When Can You Cancel?</h2>
+<ul>
+<li><strong>Before dispatch:</strong> you can cancel any order before it is shipped. A full refund will be issued.</li>
+<li><strong>After dispatch:</strong> once an order is shipped, cancellation is not possible online. You may decline the delivery or request a return after delivery.</li>
+</ul>
+
+<h2>2. How to Cancel</h2>
+<p>Visit <a href="my-orders.html">My Orders</a> and use the cancel option on the eligible order, or contact support via the <a href="support.html">Support</a> page with your order ID.</p>
+
+<h2>3. Automatic Cancellations</h2>
+<p>We may cancel an order automatically if:</p>
+<ul>
+<li>Payment is not received or verified within a reasonable time.</li>
+<li>The product is out of stock.</li>
+<li>A pricing or information error is detected.</li>
+<li>Suspected fraud or unauthorised activity is detected.</li>
+</ul>
+
+<h2>4. Refunds for Cancellations</h2>
+<p>Cancelled orders are refunded to the original payment method. Refunds typically reflect within 5–10 business days. See the <a href="refund-policy.html">Refund Policy</a> for details.</p>
+
+<h2>5. Contact</h2>
+<p>Need help cancelling? Email <a href="mailto:support@zipstore.in">support@zipstore.in</a>.</p>
+</div>
+<footer class="footer">
+<div class="container">
+<div class="footer-links" style="display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:center;margin-bottom:var(--space-3)">
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="contact.html">Contact Us</a>
+<a href="about.html">About Us</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
+<a href="track-order.html">Track Order</a>
+</div>
+<p>&copy; 2026 ZipStore. All rights reserved.</p>
+</div>
+</footer>
+<div class="toast" id="toast"></div>
+<script src="js/cart.js"></script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
+<script src="js/loader.js"></script>
+</body>
+</html>
