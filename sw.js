@@ -1,4 +1,4 @@
-const CACHE = 'zipstore-v8';
+const CACHE = 'zipstore-v9';
 const STATIC = [
   'css/global.css',
   'css/loader.css',
