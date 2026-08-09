@@ -22,7 +22,7 @@
   .nav-dropdown .nav-dropdown-details{width:100%}
   .nav-dropdown .nav-dropdown-details>summary{width:100%;padding:var(--space-2) 0;justify-content:space-between;background:none;border-radius:0}
   .nav-dropdown-menu{position:static;transform:none;opacity:1;visibility:visible;min-width:0;width:100%;box-shadow:none;border:none;border-top:1px solid var(--color-border);background:transparent;padding:var(--space-1) 0;display:none}
-  .nav-dropdown .nav-dropdown-details[open] .nav-dropdown-menu{display:flex}
+  .nav-dropdown .nav-dropdown-details[open] .nav-dropdown-menu{display:flex;transform:none}
   .nav-dropdown-menu a{width:100%;padding:var(--space-2) 0;white-space:normal}
 }
 
