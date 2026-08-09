@@ -1,0 +1,15 @@
+/* ZipStore professional preloader */
+.zip-preloader{position:fixed;top:0;left:0;width:100%;height:100%;z-index:999999;display:flex;align-items:center;justify-content:center;background:#ffffff;opacity:1;visibility:visible;transition:opacity .5s ease,visibility .5s ease;-webkit-tap-highlight-color:transparent}
+.zip-preloader--hidden{opacity:0;visibility:hidden;pointer-events:none}
+.zip-preloader__inner{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;max-width:90vw}
+.zip-preloader__logo-wrap{position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center}
+.zip-preloader__spinner{position:absolute;inset:0;border-radius:50%;border:4px solid #eef2ff;border-top-color:#6366f1;animation:zip-preloader-spin 1s linear infinite;will-change:transform}
+.zip-preloader__logo{width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#818cf8);border-radius:16px;box-shadow:0 10px 24px rgba(99,102,241,.28);animation:zip-preloader-pop .8s ease}
+.zip-preloader__logo svg{width:32px;height:32px}
+.zip-preloader__name{margin:20px 0 0;font-size:1.35rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#1a202c}
+.zip-preloader__text{margin:8px 0 0;font-size:.95rem;color:#64748b;min-height:1.4em;line-height:1.5}
+.zip-preloader__dots{display:inline-block;min-width:1.1em;text-align:left;white-space:pre}
+@keyframes zip-preloader-spin{to{transform:rotate(360deg)}}
+@keyframes zip-preloader-pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+html.zip-preloader-active,html.zip-preloader-active body{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.zip-preloader__spinner{animation:none}.zip-preloader__logo{animation:none}}

@@ -23,6 +23,19 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     default: null,
+    index: true,
+  },
+  clientOrderId: {
+    type: String,
+    default: '',
+    index: true,
+  },
+  orderCode: {
+    type: String,
+    default: '',
+    unique: true,
+    sparse: true,
+    index: true,
   },
   items: {
     type: [orderItemSchema],
@@ -47,8 +60,8 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['mock', 'phonepe', 'upi'],
-    default: 'mock',
+    enum: ['phonepe', 'upi'],
+    default: 'upi',
   },
   transactionId: {
     type: String,
@@ -61,9 +74,15 @@ const orderSchema = new mongoose.Schema({
   },
   orderStatus: {
     type: String,
-    enum: ['pending', 'confirmed', 'packed', 'shipped', 'delivered', 'cancelled'],
+    enum: ['pending', 'confirmed', 'processing', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'],
     default: 'pending',
   },
+  estimatedDeliveryDate: {
+    type: Date,
+    default: null,
+  },
 }, { timestamps: true });
+
+orderSchema.index({ userId: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Order', orderSchema);

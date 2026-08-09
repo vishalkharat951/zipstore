@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="About ZipStore — our story, mission, and what makes us different.">
+<meta name="description" content="About ZipStore — an Indian online store built for fast, secure, and enjoyable shopping with transparent pricing and secure UPI payments.">
 <title>About Us — ZipStore</title>
 <link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
 <link rel="preconnect" href="https://placehold.co">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/loader.css">
+<link rel="stylesheet" href="css/policies.css">
 </head>
 <body>
 <div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
@@ -32,7 +33,23 @@
 <li><a href="index.html">Home</a></li>
 <li><a href="shop.html">Shop</a></li>
 <li><a href="track-order.html">Track Order</a></li>
+<li><a href="faq.html">FAQ</a></li>
 <li><a href="contact.html">Contact</a></li>
+<li class="nav-dropdown">
+<details class="nav-dropdown-details">
+<summary class="active">Policies</summary>
+<div class="nav-dropdown-menu">
+<a href="about.html" class="active">About Us</a>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="support.html">Support</a>
+</div>
+</details>
+</li>
 </ul>
 <div class="navbar-actions">
 <a href="cart.html" class="cart-icon" aria-label="Shopping cart">
@@ -43,48 +60,126 @@
 </div>
 </div>
 </nav>
-<div class="container" style="padding-top:var(--space-12);padding-bottom:var(--space-12);max-width:820px">
-<h1 style="font-size:var(--font-size-4xl);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-3)">About ZipStore</h1>
-<p style="color:var(--color-text-secondary);margin-bottom:var(--space-8)">Modern shopping made simple.</p>
 
-<h2>Our Story</h2>
+<div class="page-wrap page-wrap-narrow">
+<div class="page-hero">
+<div class="page-hero-icon">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+</div>
+<span class="page-eyebrow">About</span>
+<h1>About ZipStore</h1>
+<p class="page-meta">Modern shopping made simple.</p>
+<div class="page-updated">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Last updated: 09 August 2026
+</div>
+</div>
+
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">1</span><h2>Who We Are</h2></div>
 <p>ZipStore is an Indian online store built to make shopping fast, secure, and enjoyable. From discovering products to paying with UPI in seconds, we obsess over the small details that make a great shopping experience.</p>
+</div>
 
-<h2>What We Offer</h2>
-<ul>
-<li>Curated products with transparent pricing and clear photos.</li>
-<li>Fast, free shipping across India.</li>
-<li>Secure payments through the PhonePe UPI gateway.</li>
-<li>Simple order tracking and a responsive support team.</li>
-</ul>
+<div class="feature-grid">
+<div class="feature-tile">
+<div class="ft-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+</div>
+<h3>Curated Products</h3>
+<p>Curated products with transparent pricing and clear photos.</p>
+</div>
+<div class="feature-tile">
+<div class="ft-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+</div>
+<h3>Fast Free Shipping</h3>
+<p>Fast, free shipping across India.</p>
+</div>
+<div class="feature-tile">
+<div class="ft-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+</div>
+<h3>Secure Payments</h3>
+<p>Secure payments through the PhonePe UPI gateway.</p>
+</div>
+<div class="feature-tile">
+<div class="ft-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+</div>
+<h3>Responsive Support</h3>
+<p>Simple order tracking and a responsive support team.</p>
+</div>
+</div>
 
-<h2>Our Mission</h2>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">2</span><h2>Our Mission</h2></div>
 <p>We believe great products should be easy to find and effortless to buy. Every part of the experience — browsing, checking out, tracking, and support — is designed with that goal in mind.</p>
+</div>
 
-<h2>Our Values</h2>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">3</span><h2>Our Values</h2></div>
 <ul>
 <li><strong>Trust:</strong> your data and payments are protected with industry-standard security.</li>
 <li><strong>Transparency:</strong> no hidden fees, clear policies, honest product info.</li>
 <li><strong>Service:</strong> real people ready to help you before and after your purchase.</li>
 </ul>
-
-<p style="margin-top:var(--space-8)">Questions? Visit the <a href="faq.html">FAQ</a>, <a href="support.html">Support</a>, or <a href="contact.html">Contact</a> pages.</p>
 </div>
-<footer class="footer">
-<div class="container">
-<div class="footer-links" style="display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:center;margin-bottom:var(--space-3)">
+
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">4</span><h2>Get in Touch</h2></div>
+<p>Questions? Visit the <a href="faq.html">FAQ</a>, <a href="support.html">Support</a>, or <a href="contact.html">Contact</a> pages, email <a href="mailto:support@zipstore.in">support@zipstore.in</a>, or call <a href="tel:+918669303401">+91 86693 03401</a>.</p>
+</div>
+
+<div class="related-links">
+<a href="contact.html">Contact Us</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
 <a href="privacy-policy.html">Privacy Policy</a>
 <a href="terms.html">Terms &amp; Conditions</a>
+</div>
+</div>
+
+<footer class="footer footer-extended">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-col footer-col-brand">
+<div class="footer-brand-name">ZipStore</div>
+<p>Indian online store — curated products, transparent pricing, secure PhonePe UPI payments, and responsive support.</p>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Shop</h4>
+<a href="index.html">Home</a>
+<a href="shop.html">Shop</a>
+<a href="cart.html">Cart</a>
+<a href="track-order.html">Track Order</a>
+<a href="my-orders.html">My Orders</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Company</h4>
+<a href="about.html">About Us</a>
+<a href="contact.html">Contact Us</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Policies</h4>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
 <a href="refund-policy.html">Refund Policy</a>
 <a href="cancellation-policy.html">Cancellation Policy</a>
 <a href="shipping-policy.html">Shipping Policy</a>
-<a href="contact.html">Contact Us</a>
-<a href="about.html">About Us</a>
-<a href="faq.html">FAQ</a>
-<a href="support.html">Support</a>
-<a href="track-order.html">Track Order</a>
 </div>
+<div class="footer-col footer-col-contact">
+<h4 class="footer-col-title">Get in Touch</h4>
+<a href="mailto:support@zipstore.in">support@zipstore.in</a>
+<a href="tel:+918669303401">+91 86693 03401</a>
+<span>Pune, Maharashtra, India</span>
+</div>
+</div>
+<div class="footer-bottom">
 <p>&copy; 2026 ZipStore. All rights reserved.</p>
+</div>
 </div>
 </footer>
 <div class="toast" id="toast"></div>

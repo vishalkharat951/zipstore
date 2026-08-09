@@ -1,7 +1,8 @@
-const CACHE = 'zipstore-v7';
+const CACHE = 'zipstore-v8';
 const STATIC = [
   'css/global.css',
   'css/loader.css',
+  'css/policies.css',
   'js/admin.js',
   'js/cart.js',
   'js/loader.js',
@@ -20,6 +21,7 @@ const SHELL = [
   'admin.html',
   'privacy-policy.html',
   'terms.html',
+  'return-policy.html',
   'refund-policy.html',
   'cancellation-policy.html',
   'shipping-policy.html',

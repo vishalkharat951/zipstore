@@ -1,0 +1,150 @@
+{
+  "document": "Site Information - PhonePe Payment Gateway Onboarding Submission",
+  "project": "ZipStore",
+  "date": "2026-08-08",
+  "data_verified_from": "live codebase (routes/payments.js, server.js, services/phonepe.js, js/config.js, products_export.json)",
+  "merchant": {
+    "business_name": "ZipStore",
+    "business_type": "Online e-commerce store (retail)",
+    "business_category": "E-commerce / Online Retail (general merchandise)",
+    "registered_address": "ZipStore, Pune, Maharashtra, India",
+    "website": "https://vishalkharat951.github.io/zipstore/",
+    "support_email": "support@zipstore.in",
+    "contact_phone": "+91 86693 03401",
+    "payment_model": "UPI via PhonePe Payment Gateway (PG API)",
+    "currency": "INR",
+    "display_name": "ZipStore",
+    "description": "ZipStore is an Indian online store built to make shopping fast, secure, and enjoyable. From discovering products to paying with UPI in seconds. Curated products with transparent pricing, fast free shipping across India, secure PhonePe UPI payments, order tracking, and responsive support."
+  },
+  "website": {
+    "storefront_url": "https://vishalkharat951.github.io/zipstore/",
+    "hosting": "GitHub Pages (HTTPS)",
+    "shop_page": "https://vishalkharat951.github.io/zipstore/shop.html",
+    "product_page": "https://vishalkharat951.github.io/zipstore/product.html?id=<productId>",
+    "cart_page": "https://vishalkharat951.github.io/zipstore/cart.html",
+    "checkout_page": "https://vishalkharat951.github.io/zipstore/checkout.html",
+    "order_confirmation_page": "https://vishalkharat951.github.io/zipstore/my-orders.html",
+    "track_order_page": "https://vishalkharat951.github.io/zipstore/track-order.html",
+    "login_page": "https://vishalkharat951.github.io/zipstore/login.html",
+    "admin_panel": "https://vishalkharat951.github.io/zipstore/admin.html",
+    "policy_pages": {
+      "privacy_policy": "https://vishalkharat951.github.io/zipstore/privacy-policy.html",
+      "terms_and_conditions": "https://vishalkharat951.github.io/zipstore/terms.html",
+      "refund_policy": "https://vishalkharat951.github.io/zipstore/refund-policy.html",
+      "cancellation_policy": "https://vishalkharat951.github.io/zipstore/cancellation-policy.html",
+      "shipping_policy": "https://vishalkharat951.github.io/zipstore/shipping-policy.html",
+      "contact": "https://vishalkharat951.github.io/zipstore/contact.html",
+      "about": "https://vishalkharat951.github.io/zipstore/about.html",
+      "faq": "https://vishalkharat951.github.io/zipstore/faq.html",
+      "support": "https://vishalkharat951.github.io/zipstore/support.html"
+    }
+  },
+  "backend": {
+    "api_base_url": "https://zip-backend-myp0.onrender.com/api",
+    "api_gateway_current_default": "https://fbecqsp5leqmdfeg23vts53dom.apigateway.ap-mumbai-1.oci.customer-oci.com/api",
+    "hosting": "Render (Express + Node.js) / OCI API Gateway",
+    "health_check": "https://zip-backend-myp0.onrender.com/api/health",
+    "https": true,
+    "note": "Deployed storefront is served from GitHub Pages at the /zipstore/ path (repo vishalkharat951/zipstore). js/config.js points to the OCI API gateway, which is live (health check returns OK). The Render host (zip-backend-myp0.onrender.com) returned 503 during verification (sleeping/unreachable). The PhonePe callback URL is registered on the Render host. Confirm with PhonePe which backend URL is the production API, and keep the callback host awake before go-live."
+  },
+  "phonepe": {
+    "payment_endpoints": [
+      { "method": "POST", "path": "/api/payments/phonepe-initiate", "purpose": "Create PhonePe transaction, return redirectUrl", "access": "logged-in or guest" },
+      { "method": "POST", "path": "/api/payments/phonepe-retry", "purpose": "Retry a pending transaction", "access": "logged-in or guest" },
+      { "method": "POST", "path": "/api/payments/phonepe-callback", "purpose": "Receive PhonePe webhook/callback, verify X-VERIFY, sync order", "access": "webhook (PhonePe to server)" },
+      { "method": "GET", "path": "/api/payments/phonepe-status/:transactionId", "purpose": "Poll / verify transaction status (path parameter, not query string)", "access": "auth required" },
+      { "method": "GET", "path": "/api/payments/transaction/:transactionId", "purpose": "Transaction lookup", "access": "auth required" },
+      { "method": "POST", "path": "/api/admin/payments/refund/:transactionId", "purpose": "Initiate refund", "access": "admin only" },
+      { "method": "GET", "path": "/api/payments/config", "purpose": "Client-facing config (phonepeConfigured, phonepeEnv, upiId)", "access": "public" },
+      { "method": "POST", "path": "/api/payments/upi-initiate", "purpose": "Manual UPI link fallback (UPI deep link)", "access": "logged-in or guest" }
+    ],
+    "api_base_urls": {
+      "test": "https://api-preprod.phonepe.com/apis/hermes",
+      "production": "https://api.phonepe.com/apis/hermes"
+    },
+    "callback_url": "https://zip-backend-myp0.onrender.com/api/payments/phonepe-callback",
+    "redirect_url": "https://vishalkharat951.github.io/zipstore/my-orders.html",
+    "checksum_algorithm": "X-VERIFY = SHA256(<base64-payload> + <endpoint> + <salt_key>) + '###' + <salt_index> (hash###saltIndex format)",
+    "signature_notes": "Initiate: SHA256(base64(payload) + '/pg/v1/pay' + saltKey) ### saltIndex in X-VERIFY header. Status: computed over /pg/v1/status/{merchantId}/{merchantTransactionId}, also sends X-MERCHANT-ID. Callback: backend recomputes the checksum from the raw base64 response + status endpoint + salt key and compares with incoming X-VERIFY via timing-safe compare; forged callbacks rejected. UAT salt key embedded as default in code for sandbox only; the app refuses to use the UAT key in a production environment.",
+    "payment_flow": [
+      "Customer checks out -> frontend calls /api/payments/phonepe-initiate",
+      "Backend builds payload (amount from order server-side), computes X-VERIFY, calls PhonePe PG API /pg/v1/pay",
+      "PhonePe returns redirectUrl -> customer redirected to PhonePe payment page (UPI)",
+      "PhonePe calls the callback URL; backend verifies X-VERIFY and marks the order paid / confirmed on PAYMENT_SUCCESS",
+      "Frontend can poll /api/payments/phonepe-status/:transactionId to reconcile if a callback is missed; /api/payments/phonepe-retry re-attempts pending transactions"
+    ],
+    "credentials": {
+      "environment": "test (UAT sandbox)",
+      "production_environment": "production (to be issued by PhonePe)",
+      "merchant_id": "MERCHANTUAT",
+      "production_merchant_id": "<production merchant ID>",
+      "salt_key": "(UAT key in code defaults)",
+      "production_salt_key": "<production salt key - 32 chars>",
+      "salt_index": "1",
+      "upi_id_manual_display": "8669303401@ybl",
+      "settlement_vpa": "<merchant settlement VPA>",
+      "merchant_display_name": "ZipStore"
+    },
+    "production_env_variables": [
+      "PHONEPE_MERCHANT_ID",
+      "PHONEPE_SALT_KEY",
+      "PHONEPE_SALT_INDEX",
+      "PHONEPE_ENV",
+      "PHONEPE_CALLBACK_URL",
+      "PHONEPE_REDIRECT_URL",
+      "PHONEPE_WEBHOOK_SECRET",
+      "UPI_ID",
+      "MERCHANT_NAME",
+      "ALLOWED_ORIGINS",
+      "API_URL",
+      "FRONTEND_URL"
+    ]
+  },
+  "product_catalog": {
+    "categories": [
+      {
+        "name": "Baby Products",
+        "products": [
+          { "name": "Anti-Snoring Lips Strip", "sku": "ASLS-001", "price_inr": 50.00, "discount_price_inr": 40.00, "stock": 149 },
+          { "name": "Earpick Flashlight Ear Cleaner", "sku": "EPEC-001", "price_inr": 18.00, "discount_price_inr": 15.00, "stock": 199 },
+          { "name": "Smile Baby Knee Pad", "sku": "SBKP-001", "price_inr": 25.00, "discount_price_inr": 23.00, "stock": 118 },
+          { "name": "V-Shape Baby Safety Protection", "sku": "VBSP-001", "price_inr": 12.00, "discount_price_inr": 10.00, "stock": 200 }
+        ]
+      },
+      {
+        "name": "Health & Beauty",
+        "products": []
+      }
+    ],
+    "currency": "INR",
+    "data_source": "products_export.json (Django fixture) / MongoDB product collection"
+  },
+  "security": [
+    "HTTPS on all storefront, policy, and API URLs",
+    "X-VERIFY signature verification on all PhonePe callbacks (forged callbacks rejected via timing-safe compare)",
+    "Duplicate-order protection via clientOrderId (prevents double charging on retry)",
+    "Amount always derived server-side from the order - never trusted from the client",
+    "Status, transaction lookup and refund endpoints require authentication (admin-only for refund); webhook and payment routes are rate-limited",
+    "Optional extra PHONEPE_WEBHOOK_SECRET header check supported",
+    "CORS allowlist enforced (https://vishalkharat951.github.io and localhost dev origins)"
+  ],
+  "onboarding_status": {
+    "code_integration": "Done (UAT verified)",
+    "uat_credentials_in_place": "Done",
+    "end_to_end_uat_signed_off": "Pending (needs PhonePe UAT dashboard)",
+    "production_credentials_issued": "Pending - awaiting PhonePe",
+    "url_registration": "Pending PhonePe approval",
+    "kyc_documents": "To be provided by merchant",
+    "settlement_bank_details": "To be provided by merchant"
+  },
+  "required_merchant_actions": [
+    "Submit KYC: PAN, GST certificate, settlement bank account details, address proof",
+    "Confirm final business display name and business category",
+    "Confirm production backend host (Render vs OCI) so the callback URL is final",
+    "Register and get approval for callback URL: https://zip-backend-myp0.onrender.com/api/payments/phonepe-callback",
+    "Register and get approval for redirect URL: https://vishalkharat951.github.io/zipstore/my-orders.html",
+    "Complete one successful UAT transaction in the PhonePe sandbox dashboard",
+    "Receive production Merchant ID + Salt Key and set them as env vars on the hosting platform",
+    "Switch PHONEPE_ENV=production and run a Rs.1 live test"
+  ]
+}

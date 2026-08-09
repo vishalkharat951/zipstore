@@ -93,6 +93,9 @@ async function apiGet(url, opts) {
 document.addEventListener('click', e => {
   const t = e.target.closest('#navToggle');
   if (t) document.getElementById('navLinks')?.classList.toggle('open');
+  document.querySelectorAll('.nav-dropdown-details[open]').forEach(d => {
+    if (!d.closest('.nav-dropdown')?.contains(e.target)) d.removeAttribute('open');
+  });
 });
 
 const Cart = {

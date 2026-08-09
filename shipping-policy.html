@@ -3,37 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ZipStore Shipping Policy — delivery methods, timelines, areas, charges and liabilities.">
+<meta name="description" content="ZipStore Shipping Policy — how orders are shipped, delivery timelines, delivery address and confirmation, and shipping charges.">
 <title>Shipping Policy — ZipStore</title>
 <link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
 <link rel="preconnect" href="https://placehold.co">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/loader.css">
-<style>
-.policy-wrap{max-width:860px;margin:0 auto;padding:var(--space-12) var(--space-4) var(--space-16)}
-.policy-hero{text-align:center;margin-bottom:var(--space-10)}
-.policy-eyebrow{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-1-5) var(--space-4);border-radius:var(--radius-full);background:var(--color-primary-light);color:var(--color-primary);font-size:var(--font-size-sm);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:var(--space-4)}
-.policy-hero h1{font-size:var(--font-size-4xl);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-3)}
-.policy-meta{color:var(--color-text-secondary);font-size:var(--font-size-sm)}
-.policy-updated{display:inline-flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4);padding:var(--space-2) var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--font-size-sm);color:var(--color-text-secondary);box-shadow:var(--shadow-sm)}
-.policy-updated svg{flex-shrink:0}
-.policy-notice{display:flex;gap:var(--space-4);align-items:flex-start;padding:var(--space-5) var(--space-6);border:1px solid var(--color-primary-light);border-left:4px solid var(--color-primary);border-radius:var(--radius-lg);background:var(--color-primary-light);margin-bottom:var(--space-8)}
-.policy-notice .ic{flex-shrink:0;width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center}
-.policy-notice strong{display:block;margin-bottom:var(--space-1);color:var(--color-primary)}
-.policy-notice p{font-size:var(--font-size-sm);color:#475569}
-.policy-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6) var(--space-8);margin-bottom:var(--space-5);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition)}
-.policy-card:hover{box-shadow:var(--shadow-md)}
-.policy-card-head{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-3)}
-.policy-num{flex-shrink:0;width:34px;height:34px;border-radius:var(--radius-full);background:var(--color-primary-light);color:var(--color-primary);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:var(--font-size-sm)}
-.policy-card h2{font-size:var(--font-size-lg);font-weight:700;margin:0}
-.policy-card p,.policy-card li{color:#475569}
-.policy-card ul{padding-left:var(--space-5);display:grid;gap:var(--space-2)}
-.policy-table{width:100%;border-collapse:collapse;font-size:var(--font-size-sm);margin-top:var(--space-4)}
-.policy-table th,.policy-table td{padding:var(--space-3) var(--space-4);border:1px solid var(--color-border);text-align:left}
-.policy-table th{background:#f1f5f9;font-weight:600;color:var(--color-text)}
-.policy-strong{color:var(--color-text);font-weight:600}
-</style>
+<link rel="stylesheet" href="css/policies.css">
 </head>
 <body>
 <div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
@@ -56,7 +33,23 @@
 <li><a href="index.html">Home</a></li>
 <li><a href="shop.html">Shop</a></li>
 <li><a href="track-order.html">Track Order</a></li>
+<li><a href="faq.html">FAQ</a></li>
 <li><a href="contact.html">Contact</a></li>
+<li class="nav-dropdown">
+<details class="nav-dropdown-details">
+<summary class="active">Policies</summary>
+<div class="nav-dropdown-menu">
+<a href="about.html">About Us</a>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html" class="active">Shipping Policy</a>
+<a href="support.html">Support</a>
+</div>
+</details>
+</li>
 </ul>
 <div class="navbar-actions">
 <a href="cart.html" class="cart-icon" aria-label="Shopping cart">
@@ -68,93 +61,115 @@
 </div>
 </nav>
 
-<div class="policy-wrap">
-<div class="policy-hero">
-<span class="policy-eyebrow">Legal &amp; Policies</span>
+<div class="page-wrap page-wrap-narrow">
+<div class="page-hero">
+<div class="page-hero-icon">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+</div>
+<span class="page-eyebrow">Policies</span>
 <h1>Shipping Policy</h1>
-<p class="policy-meta">Everything you need to know about how your orders are delivered.</p>
-<div class="policy-updated">
+<p class="page-meta">How your orders are shipped, delivered, and confirmed.</p>
+<div class="page-updated">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-Last updated: 08 August 2026
+Last updated: 09 August 2026
 </div>
 </div>
 
-<div class="policy-notice">
+<div class="notice-card">
 <div class="ic">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
 </div>
 <div>
 <strong>Quick Summary</strong>
-<p>Orders are shipped via registered domestic courier companies and/or speed post, delivered within 7 days (or the date agreed at confirmation) subject to courier norms. Delivery is made to the address provided at purchase, confirmed by email, and any shipping costs levied are non-refundable.</p>
+<p>Orders are shipped through registered domestic courier companies and/or Speed Post, delivered within 7 days (or the date agreed at order confirmation) subject to courier/post office norms, to the address provided at purchase.</p>
 </div>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">1</span><h2>Delivery Method &amp; Areas</h2></div>
-<p>The orders for the user are shipped through <span class="policy-strong">registered domestic courier companies and/or speed post only</span>. We currently deliver across India — availability for your pincode is confirmed during checkout.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">1</span><h2>Shipping Method</h2></div>
+<p>Orders are shipped through <span class="policy-strong">registered domestic courier companies and/or Speed Post only</span>.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">2</span><h2>Delivery Timeframe</h2></div>
-<p>Orders are delivered <span class="policy-strong">within 7 days from the date of the order and/or payment</span>, or as per the delivery date agreed at the time of order confirmation and delivery of the shipment, subject to courier company / post office norms.</p>
-<table class="policy-table">
-<thead>
-<tr><th>Stage</th><th>Indicative Timeframe</th></tr>
-</thead>
-<tbody>
-<tr><td>Order processing &amp; packing</td><td>1–2 business days after payment confirmation</td></tr>
-<tr><td>Metro cities</td><td>2–4 business days</td></tr>
-<tr><td>Other locations</td><td>4–7 business days</td></tr>
-<tr><td>Maximum delivery window</td><td>Within 7 days (subject to courier / post office norms)</td></tr>
-</tbody>
-</table>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">2</span><h2>Delivery Timeline</h2></div>
+<p>Orders are delivered <span class="policy-strong">within 7 days from the date of the order and/or payment</span>, or according to the delivery date agreed at the time of order confirmation and delivery of the shipment, subject to courier company / post office norms.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">3</span><h2>Courier Delays &amp; Liability</h2></div>
-<p>Platform Owner shall <span class="policy-strong">not be liable for any delay in delivery</span> by the courier company / postal authority. If your order is delayed beyond the estimated timeframe, contact us via the <a href="support.html" style="color:var(--color-primary);font-weight:600">Support</a> page and we will investigate with the logistics partner.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">3</span><h2>Delivery Address</h2></div>
+<p>Delivery of all orders will be made to the <span class="policy-strong">address provided by the buyer at the time of purchase</span>. Please make sure the delivery address is correct at checkout.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">4</span><h2>Delivery Address</h2></div>
-<p>Delivery of all orders will be made to the <span class="policy-strong">address provided by the buyer at the time of purchase</span>. Please ensure your delivery address and phone number are correct at checkout — we are not responsible for deliveries to incorrectly provided addresses.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">4</span><h2>Delivery Confirmation</h2></div>
+<p>Delivery of our services will be confirmed on your <span class="policy-strong">email ID as specified at the time of registration</span>. You can also check the latest status anytime on the <a href="track-order.html">Track Order</a> page or <a href="my-orders.html">My Orders</a>.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">5</span><h2>Delivery Confirmation</h2></div>
-<p>Delivery of our services will be confirmed on your <span class="policy-strong">email ID as specified at the time of registration</span>. You can also track your order anytime using the <a href="track-order.html" style="color:var(--color-primary);font-weight:600">Track Order</a> page or by visiting <a href="my-orders.html" style="color:var(--color-primary);font-weight:600">My Orders</a>.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">5</span><h2>Delivery Delays</h2></div>
+<p>The Platform Owner shall <span class="policy-strong">not be liable for any delay in delivery</span> caused by the courier company / postal authority. If your order is delayed, contact us via the <a href="support.html">Support</a> page and we will investigate with the logistics partner.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">6</span><h2>Shipping Charges</h2></div>
-<ul>
-<li>Standard shipping is <strong>FREE</strong> on all orders at present.</li>
-<li>No hidden charges — the amount shown at checkout is the final amount.</li>
-<li>If there are any shipping cost(s) levied by the seller or the Platform Owner (as the case may be), the same is <span class="policy-strong">not refundable</span>.</li>
-</ul>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">6</span><h2>Shipping Charges</h2></div>
+<p>If there are any shipping cost(s) levied by the seller or the Platform Owner (as the case may be), the same is <span class="policy-strong">not refundable</span>.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">7</span><h2>Contact</h2></div>
-<p>Shipping questions? Email <a href="mailto:support@zipstore.in" style="color:var(--color-primary);font-weight:600">support@zipstore.in</a> or reach us via the <a href="contact.html" style="color:var(--color-primary);font-weight:600">Contact</a> page.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">7</span><h2>Questions?</h2></div>
+<p>Shipping questions? Email <a href="mailto:support@zipstore.in">support@zipstore.in</a> or reach us via the <a href="contact.html">Contact</a> page.</p>
+</div>
+
+<div class="related-links">
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="track-order.html">Track Order</a>
+<a href="support.html">Support</a>
 </div>
 </div>
 
-<footer class="footer">
+<footer class="footer footer-extended">
 <div class="container">
-<div class="footer-links" style="display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:center;margin-bottom:var(--space-3)">
+<div class="footer-grid">
+<div class="footer-col footer-col-brand">
+<div class="footer-brand-name">ZipStore</div>
+<p>Indian online store — curated products, transparent pricing, secure PhonePe UPI payments, and responsive support.</p>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Shop</h4>
+<a href="index.html">Home</a>
+<a href="shop.html">Shop</a>
+<a href="cart.html">Cart</a>
+<a href="track-order.html">Track Order</a>
+<a href="my-orders.html">My Orders</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Company</h4>
+<a href="about.html">About Us</a>
+<a href="contact.html">Contact Us</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Policies</h4>
 <a href="privacy-policy.html">Privacy Policy</a>
 <a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
 <a href="refund-policy.html">Refund Policy</a>
 <a href="cancellation-policy.html">Cancellation Policy</a>
 <a href="shipping-policy.html">Shipping Policy</a>
-<a href="contact.html">Contact Us</a>
-<a href="about.html">About Us</a>
-<a href="faq.html">FAQ</a>
-<a href="support.html">Support</a>
-<a href="track-order.html">Track Order</a>
 </div>
+<div class="footer-col footer-col-contact">
+<h4 class="footer-col-title">Get in Touch</h4>
+<a href="mailto:support@zipstore.in">support@zipstore.in</a>
+<a href="tel:+918669303401">+91 86693 03401</a>
+<span>Pune, Maharashtra, India</span>
+</div>
+</div>
+<div class="footer-bottom">
 <p>&copy; 2026 ZipStore. All rights reserved.</p>
+</div>
 </div>
 </footer>
 <div class="toast" id="toast"></div>

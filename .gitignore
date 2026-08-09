@@ -20,6 +20,17 @@ logs/*.log.*
 # Environment
 .env
 
+# Secrets / certificates / private keys (never commit)
+*.pem
+*.crt
+*.key
+*.cer
+
+# Server logs
+node-server.log
+node-server-err.log
+*.log
+
 # Media / Uploads
 media/profiles/
 media/uploads/

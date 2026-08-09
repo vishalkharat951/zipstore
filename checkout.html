@@ -9,15 +9,48 @@
 <link rel="preconnect" href="https://placehold.co">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/policies.css">
+<link rel="stylesheet" href="css/loader.css">
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" defer></script>
 </head>
 <body>
+<div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
+<div class="loader-inner">
+<div class="loader-logo-wrap">
+<div class="loader-spinner"></div>
+<div class="loader-logo">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+</div>
+</div>
+<div class="loader-name">ZipStore</div>
+<div class="loader-text">Preparing your shopping experience<span class="loader-dots"></span></div>
+<div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+</div>
 <nav class="navbar">
 <div class="container">
 <a href="index.html" class="navbar-brand">ZipStore</a>
 <ul class="navbar-links" id="navLinks">
 <li><a href="index.html">Home</a></li>
 <li><a href="shop.html">Shop</a></li>
+<li><a href="track-order.html">Track Order</a></li>
+<li><a href="faq.html">FAQ</a></li>
+<li><a href="contact.html">Contact</a></li>
+<li class="nav-dropdown">
+<details class="nav-dropdown-details">
+<summary>Policies</summary>
+<div class="nav-dropdown-menu">
+<a href="about.html">About Us</a>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="support.html">Support</a>
+</div>
+</details>
+</li>
 </ul>
 <div class="navbar-actions">
 <a href="cart.html" class="cart-icon" aria-label="Shopping cart">
@@ -36,9 +69,47 @@
 </div>
 </div>
 </div>
-<footer class="footer">
+<footer class="footer footer-extended">
 <div class="container">
+<div class="footer-grid">
+<div class="footer-col footer-col-brand">
+<div class="footer-brand-name">ZipStore</div>
+<p>Indian online store — curated products, transparent pricing, secure PhonePe UPI payments, and responsive support.</p>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Shop</h4>
+<a href="index.html">Home</a>
+<a href="shop.html">Shop</a>
+<a href="cart.html">Cart</a>
+<a href="track-order.html">Track Order</a>
+<a href="my-orders.html">My Orders</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Company</h4>
+<a href="about.html">About Us</a>
+<a href="contact.html">Contact Us</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Policies</h4>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+</div>
+<div class="footer-col footer-col-contact">
+<h4 class="footer-col-title">Get in Touch</h4>
+<a href="mailto:support@zipstore.in">support@zipstore.in</a>
+<a href="tel:+918669303401">+91 86693 03401</a>
+<span>Pune, Maharashtra, India</span>
+</div>
+</div>
+<div class="footer-bottom">
 <p>&copy; 2026 ZipStore. All rights reserved.</p>
+</div>
 </div>
 </footer>
 <div class="toast" id="toast"></div>
@@ -69,32 +140,47 @@ return;
 }
 loading.style.display = 'none';
 checkoutView.innerHTML = `
-<form class="checkout-form" id="checkout-form">
-<h2 class="section-title" style="text-align:left">Shipping Information</h2>
-<div class="form-row">
-<div class="form-group">
-<label for="name">Full Name</label>
-<input type="text" id="name" required placeholder="John Doe">
-</div>
-<div class="form-group">
-<label for="phone">Phone Number</label>
-<input type="tel" id="phone" required placeholder="+1 555-123-4567">
-</div>
-</div>
-<div class="form-group">
-<label for="street">Address</label>
-<input type="text" id="street" required placeholder="123 Main St">
-</div>
-<div class="form-row">
-<div class="form-group">
-<label for="city">City</label>
-<input type="text" id="city" required placeholder="New York">
-</div>
-<div class="form-group">
-<label for="state">State</label>
-<input type="text" id="state" required placeholder="NY">
-</div>
-</div>
+    <form class="checkout-form" id="checkout-form" novalidate>
+    <h2 class="section-title" style="text-align:left">Shipping Information</h2>
+    <div class="form-row">
+    <div class="form-group">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" required placeholder="John Doe" autocomplete="name">
+    <small class="field-error" data-error-for="name" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    <div class="form-group">
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" required placeholder="+91 98765 43210" autocomplete="tel">
+    <small class="field-error" data-error-for="phone" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="email">Email <span style="color:var(--color-muted);font-weight:400">(for order updates)</span></label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+    <small class="field-error" data-error-for="email" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    <div class="form-group">
+    <label for="street">Address</label>
+    <input type="text" id="street" required placeholder="House no., street, area" autocomplete="street-address">
+    <small class="field-error" data-error-for="street" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    <div class="form-row">
+    <div class="form-group">
+    <label for="city">City</label>
+    <input type="text" id="city" required placeholder="Mumbai" autocomplete="address-level2">
+    <small class="field-error" data-error-for="city" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    <div class="form-group">
+    <label for="state">State</label>
+    <input type="text" id="state" required placeholder="Maharashtra" autocomplete="address-level1">
+    <small class="field-error" data-error-for="state" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    <div class="form-group">
+    <label for="pincode">PIN Code</label>
+    <input type="text" id="pincode" inputmode="numeric" maxlength="6" placeholder="400001" autocomplete="postal-code">
+    <small class="field-error" data-error-for="pincode" style="display:none;color:#d32f2f;font-size:0.85em"></small>
+    </div>
+    </div>
 <div class="cart-summary" style="position:static;margin-bottom:var(--space-6)">
 <h2>Order Summary</h2>
 ${items.map(item => `
@@ -118,23 +204,104 @@ ${items.map(item => `
         <input type="radio" name="paymentMethod" value="phonepe">
         PhonePe
       </label>
-      <label style="display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer">
-        <input type="radio" name="paymentMethod" value="mock">
-        Mock Payment
-      </label>
     </div>
-    <button type="submit" class="btn btn-secondary btn-block" id="place-order-btn">Place Order — ₹${total.toFixed(2)}</button>
+    <button type="submit" class="btn btn-secondary btn-block" id="place-order-btn" disabled>Place Order — ₹${total.toFixed(2)}</button>
+    <p style="font-size:var(--font-size-xs);color:var(--color-muted);margin-top:var(--space-2);text-align:center">Please fill in all required shipping details to place your order.</p>
     </form>
     `;
+    const FIELD_VALIDATORS = {
+      name: v => {
+        v = v.trim();
+        if (!v) return 'Please enter your full name.';
+        if (v.length < 2) return 'Name must be at least 2 characters.';
+        return '';
+      },
+      phone: v => {
+        v = v.trim();
+        if (!v) return 'Please enter your phone number.';
+        if (!/^(\+91[\s-]?)?[6-9]\d{9}$/.test(v.replace(/\s/g, ''))) return 'Enter a valid 10-digit Indian mobile number.';
+        return '';
+      },
+      email: v => {
+        v = v.trim();
+        if (!v) return '';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address.';
+        return '';
+      },
+      street: v => {
+        v = v.trim();
+        if (!v) return 'Please enter your delivery address.';
+        if (v.length < 5) return 'Address looks too short. Please add your full address.';
+        return '';
+      },
+      city: v => {
+        v = v.trim();
+        if (!v) return 'Please enter your city.';
+        return '';
+      },
+      state: v => {
+        v = v.trim();
+        if (!v) return 'Please enter your state.';
+        return '';
+      },
+      pincode: v => {
+        v = v.trim();
+        if (!v) return '';
+        if (!/^\d{6}$/.test(v)) return 'PIN code must be 6 digits.';
+        return '';
+      },
+    };
+    const placeBtn = document.getElementById('place-order-btn');
+    function setFieldError(input, message) {
+      const errorEl = document.querySelector(`[data-error-for="${input.id}"]`);
+      input.style.borderColor = message ? '#d32f2f' : '';
+      if (errorEl) {
+        errorEl.textContent = message || '';
+        errorEl.style.display = message ? 'block' : 'none';
+      }
+    }
+    function validateField(input) {
+      const fn = FIELD_VALIDATORS[input.id];
+      if (!fn) return '';
+      const err = fn(input.value);
+      setFieldError(input, err);
+      return err;
+    }
+    function updateButtonState() {
+      let valid = true;
+      document.querySelectorAll('#checkout-form input[required]').forEach(input => {
+        if (validateField(input)) valid = false;
+      });
+      const emailErr = validateField(document.getElementById('email'));
+      if (emailErr) valid = false;
+      const pinErr = validateField(document.getElementById('pincode'));
+      if (pinErr) valid = false;
+      placeBtn.disabled = !valid;
+      return valid;
+    }
+    document.querySelectorAll('#checkout-form input').forEach(input => {
+      input.addEventListener('input', () => { validateField(input); updateButtonState(); });
+      input.addEventListener('blur', () => validateField(input));
+    });
+    updateButtonState();
     document.getElementById('checkout-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!updateButtonState()) {
+        const firstInvalid = document.querySelector('#checkout-form input[required]:invalid') || document.querySelector('#checkout-form input');
+        if (firstInvalid) { firstInvalid.focus(); validateField(firstInvalid); }
+        showToast('Please fix the highlighted fields before placing your order.', 'error');
+        return;
+      }
       const shippingAddress = {
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        street: document.getElementById('street').value,
-        city: document.getElementById('city').value,
-        state: document.getElementById('state').value,
+        name: document.getElementById('name').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        street: document.getElementById('street').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        pincode: document.getElementById('pincode').value.trim() || undefined,
+        email: document.getElementById('email').value.trim() || undefined,
       };
+      const clientOrderId = 'co_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
       const authHeaders = () => {
         const t = localStorage.getItem('zipstore_token');
         return t ? { Authorization: `Bearer ${t}` } : {};
@@ -158,10 +325,11 @@ ${items.map(item => `
       const orderBody = {
         items: items.map(i => ({ productId: i.productId, quantity: i.quantity })),
         shippingAddress,
+        clientOrderId,
       };
       const btn = document.getElementById('place-order-btn');
       btn.disabled = true;
-      btn.textContent = 'Processing...';
+      btn.textContent = 'Placing order...';
       const createOrder = async () => {
         const orderRes = await fetch(`${API_BASE_URL}/orders`, {
           method: 'POST',
@@ -181,7 +349,18 @@ ${items.map(item => `
         return orderRes;
       };
       try {
-        const orderRes = await createOrder();
+        let orderRes = await createOrder();
+        if (orderRes.status === 409) {
+          let dup;
+          try { dup = await orderRes.json(); } catch {}
+          if (dup && dup.order && (dup.order._id || dup.order.id)) {
+            showToast('An order was already placed in a previous attempt. Showing it below.', 'success');
+            const orderId = dup.order._id || dup.order.id;
+            Cart.clear();
+            window.location.href = 'my-orders.html';
+            return;
+          }
+        }
         const orderBodyText = await orderRes.text();
         if (!orderRes.ok) {
           let errMsg;
@@ -290,29 +469,7 @@ ${items.map(item => `
           }
           throw new Error('No redirect URL from PhonePe');
         }
-        const payRes = await fetch(`${API_BASE_URL}/payments/checkout-mock`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...authHeaders() },
-          body: JSON.stringify({ orderId }),
-        });
-        const payText = await payRes.text();
-        if (!payRes.ok) {
-          let payErrMsg;
-          try { payErrMsg = JSON.parse(payText).error; } catch { payErrMsg = payText; }
-          throw new Error(payErrMsg || 'Payment failed');
-        }
-        let payment;
-        try { payment = JSON.parse(payText); } catch { throw new Error('Server returned invalid response'); }
-        Cart.clear();
-        checkoutView.innerHTML = `
-          <div class="cart-empty">
-            <h2>Order Confirmed!</h2>
-            <p>Your order (ID: ${orderId}) has been placed successfully.</p>
-            <p>Payment status: <strong>${payment.order.paymentStatus}</strong></p>
-            <p style="margin-top:var(--space-4)"><a href="my-orders.html" class="btn btn-secondary">View My Orders</a></p>
-            <a href="shop.html" class="btn btn-outline-dark" style="margin-top:var(--space-3)">Continue Shopping</a>
-          </div>
-        `;
+        throw new Error('Invalid payment method selected');
       } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Place Order — ₹' + total.toFixed(2);
@@ -323,5 +480,6 @@ ${items.map(item => `
 renderCheckout();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
+<script src="js/loader.js"></script>
 </body>
 </html>

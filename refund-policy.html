@@ -3,41 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ZipStore Refund &amp; Return Policy — 7-day returns, refund eligibility, method and timeline.">
-<title>Refund &amp; Return Policy — ZipStore</title>
+<meta name="description" content="ZipStore Refund Policy — if a refund is approved by the company, it will be credited to your account within 7 days.">
+<title>Refund Policy — ZipStore</title>
 <link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
 <link rel="preconnect" href="https://placehold.co">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/loader.css">
-<style>
-.policy-wrap{max-width:860px;margin:0 auto;padding:var(--space-12) var(--space-4) var(--space-16)}
-.policy-hero{text-align:center;margin-bottom:var(--space-10)}
-.policy-eyebrow{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-1-5) var(--space-4);border-radius:var(--radius-full);background:var(--color-primary-light);color:var(--color-primary);font-size:var(--font-size-sm);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:var(--space-4)}
-.policy-hero h1{font-size:var(--font-size-4xl);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-3)}
-.policy-meta{color:var(--color-text-secondary);font-size:var(--font-size-sm)}
-.policy-updated{display:inline-flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4);padding:var(--space-2) var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--font-size-sm);color:var(--color-text-secondary);box-shadow:var(--shadow-sm)}
-.policy-updated svg{flex-shrink:0}
-.policy-notice{display:flex;gap:var(--space-4);align-items:flex-start;padding:var(--space-5) var(--space-6);border:1px solid var(--color-primary-light);border-left:4px solid var(--color-primary);border-radius:var(--radius-lg);background:var(--color-primary-light);margin-bottom:var(--space-8)}
-.policy-notice .ic{flex-shrink:0;width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center}
-.policy-notice strong{display:block;margin-bottom:var(--space-1);color:var(--color-primary)}
-.policy-notice p{font-size:var(--font-size-sm);color:#475569}
-.policy-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6) var(--space-8);margin-bottom:var(--space-5);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition)}
-.policy-card:hover{box-shadow:var(--shadow-md)}
-.policy-card-head{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-3)}
-.policy-num{flex-shrink:0;width:34px;height:34px;border-radius:var(--radius-full);background:var(--color-primary-light);color:var(--color-primary);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:var(--font-size-sm)}
-.policy-card h2{font-size:var(--font-size-lg);font-weight:700;margin:0}
-.policy-card p,.policy-card li{color:#475569}
-.policy-card ul{padding-left:var(--space-5);display:grid;gap:var(--space-2)}
-.policy-strong{color:var(--color-text);font-weight:600}
-.policy-return{display:flex;gap:var(--space-5);align-items:center;padding:var(--space-8);border:2px dashed var(--color-primary);border-radius:var(--radius-xl);background:linear-gradient(135deg,#eef2ff 0%,#fff 100%);margin-bottom:var(--space-5)}
-.policy-return .days{flex-shrink:0;width:110px;height:110px;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)}
-.policy-return .days b{font-size:2.4rem;line-height:1;font-weight:800}
-.policy-return .days span{font-size:var(--font-size-xs);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
-.policy-return h2{font-size:var(--font-size-xl);font-weight:800;margin-bottom:var(--space-2);color:var(--color-text)}
-.policy-return p{color:#475569;font-size:var(--font-size-sm)}
-.policy-return p:last-child{margin-top:var(--space-2)}
-</style>
+<link rel="stylesheet" href="css/policies.css">
 </head>
 <body>
 <div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
@@ -60,7 +33,23 @@
 <li><a href="index.html">Home</a></li>
 <li><a href="shop.html">Shop</a></li>
 <li><a href="track-order.html">Track Order</a></li>
+<li><a href="faq.html">FAQ</a></li>
 <li><a href="contact.html">Contact</a></li>
+<li class="nav-dropdown">
+<details class="nav-dropdown-details">
+<summary class="active">Policies</summary>
+<div class="nav-dropdown-menu">
+<a href="about.html">About Us</a>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html" class="active">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="support.html">Support</a>
+</div>
+</details>
+</li>
 </ul>
 <div class="navbar-actions">
 <a href="cart.html" class="cart-icon" aria-label="Shopping cart">
@@ -72,95 +61,127 @@
 </div>
 </nav>
 
-<div class="policy-wrap">
-<div class="policy-hero">
-<span class="policy-eyebrow">Legal &amp; Policies</span>
-<h1>Refund &amp; Return Policy</h1>
-<p class="policy-meta">Everything you need to know about returning an item and getting your money back.</p>
-<div class="policy-updated">
+<div class="page-wrap page-wrap-narrow">
+<div class="page-hero">
+<div class="page-hero-icon">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+</div>
+<span class="page-eyebrow">Policies</span>
+<h1>Refund Policy</h1>
+<p class="page-meta">How approved refunds are processed and when you can expect the money back in your account.</p>
+<div class="page-updated">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-Last updated: 08 August 2026
+Last updated: 09 August 2026
 </div>
 </div>
 
-<div class="policy-notice">
+<div class="notice-card">
 <div class="ic">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
 </div>
 <div>
 <strong>Quick Summary</strong>
-<p>You can return any eligible item within the first 7 days from the date of purchase. After 7 days, returns are no longer offered. In case of any refunds approved by the company, it will take 7 days for the refund to be credited to your account.</p>
+<p>If a refund is approved by the company, the refund will be credited to your account within 7 days.</p>
 </div>
 </div>
 
-<div class="policy-return">
-<div class="days"><b>7</b><span>Days</span></div>
-<div>
-<h2>Return Window — First 7 Days</h2>
-<p>We offer <span class="policy-strong">Return within the first 7 days from the date of your purchase</span>. If 7 days have passed since your purchase, you will not be offered a return.</p>
-<p>To be eligible, items must be unused and in their original packaging, along with the order details.</p>
-</div>
-</div>
-
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">1</span><h2>When Can You Return?</h2></div>
-<ul>
-<li><strong>Damaged, defective, or wrong item:</strong> return the item within 7 days of purchase for a full refund or replacement.</li>
-<li><strong>Cancelled orders:</strong> if you cancel before dispatch (see <a href="cancellation-policy.html" style="color:var(--color-primary);font-weight:600">Cancellation Policy</a>), we refund the full amount.</li>
-<li><strong>Failed or duplicate payment:</strong> if your payment is captured but your order is not confirmed, we refund the full amount automatically.</li>
-<li><strong>Non-delivery:</strong> if your order is not delivered within the promised timeframe, we investigate and refund where applicable.</li>
-</ul>
-</div>
-
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">2</span><h2>Non-Returnable / Non-Refundable Items</h2></div>
-<ul>
-<li>Personalised or made-to-order items that have been manufactured as per your specifications.</li>
-<li>Products that have been used, altered, or damaged by the customer.</li>
-<li>Digital/downloadable products once accessed.</li>
-</ul>
-</div>
-
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">3</span><h2>How to Request a Return or Refund</h2></div>
-<p>Contact our support team via the <a href="support.html" style="color:var(--color-primary);font-weight:600">Support</a> page or email <a href="mailto:support@zipstore.in" style="color:var(--color-primary);font-weight:600">support@zipstore.in</a> within the 7-day window, providing your order ID and reason.</p>
-</div>
-
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">4</span><h2>Refund Method &amp; Timeline</h2></div>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">1</span><h2>Approved Refunds</h2></div>
 <p>In case of any refunds approved by the company, it will take <span class="policy-strong">7 days for the refund to be credited to your account</span>.</p>
-<ul>
-<li>Approved refunds are processed back to the original payment method (UPI / card / net banking) using our payment partner.</li>
-<li>Payments made via PhonePe UPI are returned to the original account.</li>
-</ul>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">5</span><h2>Return Shipping</h2></div>
-<p>For eligible returns, we provide a return label or reimburse standard return shipping costs. Items should be returned in original packaging.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">2</span><h2>How Refunds Are Credited</h2></div>
+<p>Approved refunds are credited back to the account you used for the payment. If you paid via UPI through the PhonePe payment gateway, the refund is returned to the same account.</p>
 </div>
 
-<div class="policy-card">
-<div class="policy-card-head"><span class="policy-num">6</span><h2>Contact</h2></div>
-<p>Questions about returns or refunds? Email <a href="mailto:support@zipstore.in" style="color:var(--color-primary);font-weight:600">support@zipstore.in</a> or reach us via the <a href="contact.html" style="color:var(--color-primary);font-weight:600">Contact</a> page.</p>
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">3</span><h2>Refund Timeline</h2></div>
+<div class="refund-timeline">
+<div class="timeline-step">
+<div class="step-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+</div>
+<b>Refund Approved</b>
+<p>Your refund is approved by the company.</p>
+</div>
+<div class="timeline-step">
+<div class="step-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><polyline points="21 3 21 9 15 9"/></svg>
+</div>
+<b>Processing</b>
+<p>Your refund is processed back to your account.</p>
+</div>
+<div class="timeline-step">
+<div class="step-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+</div>
+<b>Credit to Your Account</b>
+<p>Within 7 days of approval.</p>
+</div>
 </div>
 </div>
 
-<footer class="footer">
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">4</span><h2>Related Policies</h2></div>
+<p>Refunds are closely related to our <a href="return-policy.html">Return Policy</a> and <a href="cancellation-policy.html">Cancellation Policy</a>. You can also read how orders are delivered in the <a href="shipping-policy.html">Shipping Policy</a>.</p>
+</div>
+
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">5</span><h2>Questions?</h2></div>
+<p>Email <a href="mailto:support@zipstore.in">support@zipstore.in</a> or reach us via the <a href="contact.html">Contact</a> page. Include your order ID so we can help faster.</p>
+</div>
+
+<div class="related-links">
+<a href="return-policy.html">Return Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
+</div>
+</div>
+
+<footer class="footer footer-extended">
 <div class="container">
-<div class="footer-links" style="display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:center;margin-bottom:var(--space-3)">
+<div class="footer-grid">
+<div class="footer-col footer-col-brand">
+<div class="footer-brand-name">ZipStore</div>
+<p>Indian online store — curated products, transparent pricing, secure PhonePe UPI payments, and responsive support.</p>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Shop</h4>
+<a href="index.html">Home</a>
+<a href="shop.html">Shop</a>
+<a href="cart.html">Cart</a>
+<a href="track-order.html">Track Order</a>
+<a href="my-orders.html">My Orders</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Company</h4>
+<a href="about.html">About Us</a>
+<a href="contact.html">Contact Us</a>
+<a href="faq.html">FAQ</a>
+<a href="support.html">Support</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Policies</h4>
 <a href="privacy-policy.html">Privacy Policy</a>
 <a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
 <a href="refund-policy.html">Refund Policy</a>
 <a href="cancellation-policy.html">Cancellation Policy</a>
 <a href="shipping-policy.html">Shipping Policy</a>
-<a href="contact.html">Contact Us</a>
-<a href="about.html">About Us</a>
-<a href="faq.html">FAQ</a>
-<a href="support.html">Support</a>
-<a href="track-order.html">Track Order</a>
 </div>
+<div class="footer-col footer-col-contact">
+<h4 class="footer-col-title">Get in Touch</h4>
+<a href="mailto:support@zipstore.in">support@zipstore.in</a>
+<a href="tel:+918669303401">+91 86693 03401</a>
+<span>Pune, Maharashtra, India</span>
+</div>
+</div>
+<div class="footer-bottom">
 <p>&copy; 2026 ZipStore. All rights reserved.</p>
+</div>
 </div>
 </footer>
 <div class="toast" id="toast"></div>

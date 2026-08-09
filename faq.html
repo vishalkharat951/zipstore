@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ZipStore FAQ — answers to common questions about orders, payments, shipping, and refunds.">
+<meta name="description" content="ZipStore FAQ — answers to common questions about orders, payments, shipping, returns, and refunds.">
 <title>FAQ — ZipStore</title>
 <link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
 <link rel="preconnect" href="https://placehold.co">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/loader.css">
+<link rel="stylesheet" href="css/policies.css">
 </head>
 <body>
 <div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
@@ -32,7 +33,23 @@
 <li><a href="index.html">Home</a></li>
 <li><a href="shop.html">Shop</a></li>
 <li><a href="track-order.html">Track Order</a></li>
+<li><a href="faq.html" class="active">FAQ</a></li>
 <li><a href="contact.html">Contact</a></li>
+<li class="nav-dropdown">
+<details class="nav-dropdown-details">
+<summary>Policies</summary>
+<div class="nav-dropdown-menu">
+<a href="about.html">About Us</a>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="support.html">Support</a>
+</div>
+</details>
+</li>
 </ul>
 <div class="navbar-actions">
 <a href="cart.html" class="cart-icon" aria-label="Shopping cart">
@@ -43,85 +60,142 @@
 </div>
 </div>
 </nav>
-<div class="container" style="padding-top:var(--space-12);padding-bottom:var(--space-12);max-width:820px">
-<h1 style="font-size:var(--font-size-4xl);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-8)">Frequently Asked Questions</h1>
 
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">How do I place an order?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Add products to your cart, go to <a href="checkout.html">Checkout</a>, enter your shipping details, choose a payment method (UPI / PhonePe), and complete payment. You can shop as a guest or with an account.</p>
-</details>
+<div class="page-wrap page-wrap-narrow">
+<div class="page-hero">
+<div class="page-hero-icon">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
 </div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">Which payment methods do you accept?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">We accept UPI payments through the PhonePe gateway (PhonePe, GPay, Paytm, BHIM and other UPI apps). Card and net banking options are available on the PhonePe payment page.</p>
-</details>
+<span class="page-eyebrow">Help Center</span>
+<h1>Frequently Asked Questions</h1>
+<p class="page-meta">Quick answers about orders, payments, shipping, returns, and refunds.</p>
+<div class="page-updated">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Last updated: 09 August 2026
 </div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">I paid but my order still says "Payment Pending". What now?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Sometimes the payment confirmation takes a few minutes. Visit <a href="my-orders.html">My Orders</a> and refresh, or use the <a href="track-order.html">Track Order</a> page. If it still shows pending after 30 minutes, contact <a href="support.html">Support</a> with your order ID and transaction reference.</p>
-</details>
 </div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">How can I track my order?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Use the <a href="track-order.html">Track Order</a> page with your order ID, or sign in and visit <a href="my-orders.html">My Orders</a>.</p>
+
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">1</span><h2>Orders &amp; Payment</h2></div>
+<div class="faq-list">
+<details class="faq-accordion">
+<summary>How do I place an order?</summary>
+<div class="faq-body"><p>Add products to your cart, go to <a href="checkout.html">Checkout</a>, enter your shipping details, choose a payment method (UPI via PhonePe), and complete payment. You can shop as a guest or with an account.</p></div>
 </details>
-</div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">What is the delivery time?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Metro cities: 2–4 business days. Other locations: 4–7 business days. See the <a href="shipping-policy.html">Shipping Policy</a> for details.</p>
+<details class="faq-accordion">
+<summary>Which payment methods do you accept?</summary>
+<div class="faq-body"><p>We accept UPI payments through the PhonePe gateway (PhonePe, GPay, Paytm, BHIM and other UPI apps). Card and net banking options are available on the PhonePe payment page.</p></div>
 </details>
-</div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">Can I cancel my order?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Yes, you can cancel before dispatch from <a href="my-orders.html">My Orders</a>. See the <a href="cancellation-policy.html">Cancellation Policy</a>.</p>
+<details class="faq-accordion">
+<summary>I paid but my order still says "Payment Pending". What now?</summary>
+<div class="faq-body"><p>Sometimes the payment confirmation takes a few minutes. Visit <a href="my-orders.html">My Orders</a> and refresh, or use the <a href="track-order.html">Track Order</a> page. If it still shows pending after 30 minutes, contact <a href="support.html">Support</a> with your order ID and transaction reference.</p></div>
 </details>
-</div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">How do refunds work?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">In case of any refunds approved by the company, it will take 7 days for the refund to be credited to your account. See the <a href="refund-policy.html">Refund Policy</a>.</p>
-</details>
-</div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">I received a damaged or wrong item. What do I do?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Contact <a href="support.html">Support</a> within 7 days of delivery with your order ID and photos. We'll arrange a return, replacement, or refund.</p>
-</details>
-</div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">Is my payment information secure?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Yes. Payments are processed by PhonePe, a regulated payment gateway. We never store your card or UPI credentials. All traffic uses HTTPS encryption.</p>
-</details>
-</div>
-<div class="faq-item" style="margin-bottom:var(--space-4)">
-<details style="border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4)">
-<summary style="cursor:pointer;font-weight:600">Still have questions?</summary>
-<p style="margin-top:var(--space-3);color:var(--color-text-secondary)">Visit the <a href="support.html">Support</a> page or email <a href="mailto:support@zipstore.in">support@zipstore.in</a>.</p>
+<details class="faq-accordion">
+<summary>Is my payment information secure?</summary>
+<div class="faq-body"><p>Yes. Payments are processed by PhonePe, a regulated payment gateway. We never store your card or UPI credentials. All traffic uses HTTPS encryption.</p></div>
 </details>
 </div>
 </div>
-<footer class="footer">
-<div class="container">
-<div class="footer-links" style="display:flex;flex-wrap:wrap;gap:var(--space-4);justify-content:center;margin-bottom:var(--space-3)">
-<a href="privacy-policy.html">Privacy Policy</a>
-<a href="terms.html">Terms &amp; Conditions</a>
+
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">2</span><h2>Shipping &amp; Tracking</h2></div>
+<div class="faq-list">
+<details class="faq-accordion">
+<summary>How can I track my order?</summary>
+<div class="faq-body"><p>Use the <a href="track-order.html">Track Order</a> page with your order ID, or sign in and visit <a href="my-orders.html">My Orders</a>.</p></div>
+</details>
+<details class="faq-accordion">
+<summary>What is the delivery time?</summary>
+<div class="faq-body"><p>We aim to deliver your order within 7 days, or by the date agreed at order confirmation. Delivery times depend on our courier or postal partner and are subject to their service norms. See the <a href="shipping-policy.html">Shipping Policy</a>.</p></div>
+</details>
+<details class="faq-accordion">
+<summary>Do you charge for shipping?</summary>
+<div class="faq-body"><p>No shipping charge is added at checkout, so your order ships free of charge. If any shipping costs are ever levied, they are non-refundable. See the <a href="shipping-policy.html">Shipping Policy</a>.</p></div>
+</details>
+</div>
+</div>
+
+<div class="section-card">
+<div class="section-card-head"><span class="section-num">3</span><h2>Returns, Refunds &amp; Cancellations</h2></div>
+<div class="faq-list">
+<details class="faq-accordion">
+<summary>What is the return policy?</summary>
+<div class="faq-body"><p>Returns are accepted within 7 days of purchase. See the <a href="return-policy.html">Return Policy</a> for the exact rule.</p></div>
+</details>
+<details class="faq-accordion">
+<summary>How do refunds work?</summary>
+<div class="faq-body"><p>In case of any refund approved by the company, it will take 7 days for the refund to be credited to your account. See the <a href="refund-policy.html">Refund Policy</a>.</p></div>
+</details>
+<details class="faq-accordion">
+<summary>Can I cancel my order?</summary>
+<div class="faq-body"><p>Yes, you can cancel before dispatch. See the <a href="cancellation-policy.html">Cancellation Policy</a> for the exact rule.</p></div>
+</details>
+<details class="faq-accordion">
+<summary>I received a damaged or wrong item. What do I do?</summary>
+<div class="faq-body"><p>Contact <a href="support.html">Support</a> within 7 days of purchase with your order ID and details. Your case will be reviewed under our <a href="return-policy.html">Return Policy</a> and <a href="refund-policy.html">Refund Policy</a>.</p></div>
+</details>
+</div>
+</div>
+
+<div class="notice-card">
+<div class="notice-icon">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</div>
+<p>Still have questions? Visit the <a href="support.html">Support</a> page, email <a href="mailto:support@zipstore.in">support@zipstore.in</a>, or call <a href="tel:+918669303401">+91 86693 03401</a>.</p>
+</div>
+
+<div class="related-links">
+<a href="support.html">Support</a>
+<a href="contact.html">Contact Us</a>
+<a href="track-order.html">Track Order</a>
+<a href="return-policy.html">Return Policy</a>
 <a href="refund-policy.html">Refund Policy</a>
 <a href="cancellation-policy.html">Cancellation Policy</a>
 <a href="shipping-policy.html">Shipping Policy</a>
-<a href="contact.html">Contact Us</a>
+</div>
+</div>
+
+<footer class="footer footer-extended">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-col footer-col-brand">
+<div class="footer-brand-name">ZipStore</div>
+<p>Indian online store — curated products, transparent pricing, secure PhonePe UPI payments, and responsive support.</p>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Shop</h4>
+<a href="index.html">Home</a>
+<a href="shop.html">Shop</a>
+<a href="cart.html">Cart</a>
+<a href="track-order.html">Track Order</a>
+<a href="my-orders.html">My Orders</a>
+</div>
+<div class="footer-col">
+<h4 class="footer-col-title">Company</h4>
 <a href="about.html">About Us</a>
+<a href="contact.html">Contact Us</a>
 <a href="faq.html">FAQ</a>
 <a href="support.html">Support</a>
-<a href="track-order.html">Track Order</a>
 </div>
+<div class="footer-col">
+<h4 class="footer-col-title">Policies</h4>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+<a href="return-policy.html">Return Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="cancellation-policy.html">Cancellation Policy</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+</div>
+<div class="footer-col footer-col-contact">
+<h4 class="footer-col-title">Get in Touch</h4>
+<a href="mailto:support@zipstore.in">support@zipstore.in</a>
+<a href="tel:+918669303401">+91 86693 03401</a>
+<span>Pune, Maharashtra, India</span>
+</div>
+</div>
+<div class="footer-bottom">
 <p>&copy; 2026 ZipStore. All rights reserved.</p>
+</div>
 </div>
 </footer>
 <div class="toast" id="toast"></div>

@@ -1,98 +1,80 @@
 const crypto = require('crypto');
 const Order = require('../models/Order');
+const PaymentTransaction = require('../models/PaymentTransaction');
+const phonepe = require('../services/phonepe');
 
-const UPI_ID = '8669303401@ybl';
-const MERCHANT_NAME = 'ZipStore';
-
+const UPI_ID = (process.env.UPI_ID || '').trim();
+const MERCHANT_NAME = process.env.MERCHANT_NAME || 'ZipStore';
+const CURRENCY = 'INR';
 
 function generateUPIUrl(amount, orderId, transactionRef) {
   const tn = `Order ${orderId}`;
   return (
-    `upi://pay?pa=${UPI_ID}` +
+    `upi://pay?pa=${encodeURIComponent(UPI_ID)}` +
     `&pn=${encodeURIComponent(MERCHANT_NAME)}` +
     `&am=${amount.toFixed(2)}` +
     `&tn=${encodeURIComponent(tn)}` +
-    `&tr=${transactionRef}` +
-    `&cu=INR`
+    `&tr=${encodeURIComponent(transactionRef)}` +
+    `&cu=${CURRENCY}`
   );
 }
 
+async function findOwnedOrder(orderId, req) {
+  let query = { _id: orderId };
+  if (req.user) query.userId = req.user.id;
+  return Order.findById(query);
+}
 
 exports.initiateUPI = async (req, res, next) => {
   try {
-    const { orderId } = req.body;
-
-    if (!orderId) {
-      return res.status(400).json({ error: 'orderId is required' });
+    if (!UPI_ID) {
+      return res.status(503).json({
+        error: 'UPI is not configured yet. Please pay after confirmation or contact support.',
+      });
     }
 
-    const order = await Order.findById(orderId);
+    const { orderId } = req.body;
+
+    const order = await findOwnedOrder(orderId, req);
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-
     if (order.paymentStatus === 'paid') {
       return res.status(400).json({ error: 'Order is already paid' });
     }
 
-    const transactionRef = 'UPI_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8).toUpperCase();
-    const upiUrl = generateUPIUrl(order.totalAmount, order._id, transactionRef);
+    const transactionRef = 'UPI_' + Date.now() + '_' + crypto.randomBytes(3).toString('hex').toUpperCase();
+
+    let transaction = await PaymentTransaction.findOne({ order: order._id, paymentStatus: 'pending' });
+    if (!transaction) {
+      transaction = await PaymentTransaction.create({
+        order: order._id,
+        transactionId: transactionRef,
+        paymentMethod: 'upi',
+        paymentStatus: 'pending',
+        amount: order.totalAmount,
+      });
+    }
+
+    const upiUrl = generateUPIUrl(order.totalAmount, order._id, transaction.transactionId);
 
     order.paymentMethod = 'upi';
-    order.transactionId = transactionRef;
+    order.transactionId = transaction.transactionId;
     order.paymentStatus = 'pending';
     await order.save();
 
     res.json({
       success: true,
       upiUrl,
-      transactionRef,
+      transactionRef: transaction.transactionId,
       upiId: UPI_ID,
       merchantName: MERCHANT_NAME,
       amount: order.totalAmount,
       order: {
         id: order._id,
+        orderCode: order.orderCode,
         paymentStatus: order.paymentStatus,
         orderStatus: order.orderStatus,
-      },
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.checkoutMock = async (req, res, next) => {
-  try {
-    const { orderId } = req.body;
-
-    if (!orderId) {
-      return res.status(400).json({ error: 'orderId is required' });
-    }
-
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-
-    if (order.paymentStatus === 'paid') {
-      return res.status(400).json({ error: 'Order is already paid' });
-    }
-
-    const mockToken = 'mocked_payment_token_' + Date.now();
-
-    order.paymentStatus = 'paid';
-    order.paymentMethod = 'mock';
-    order.transactionId = mockToken;
-    await order.save();
-
-    res.json({
-      message: 'Payment successful (mock)',
-      mockToken,
-      order: {
-        id: order._id,
-        paymentStatus: order.paymentStatus,
-        orderStatus: order.orderStatus,
-        totalAmount: order.totalAmount,
       },
     });
   } catch (err) {
@@ -102,108 +84,61 @@ exports.checkoutMock = async (req, res, next) => {
 
 exports.initiatePhonePe = async (req, res, next) => {
   try {
-    const { orderId } = req.body;
+    const { orderId, mobileNumber } = req.body;
 
-    if (!orderId) {
-      return res.status(400).json({ error: 'orderId is required' });
-    }
-
-    const order = await Order.findById(orderId);
+    const order = await findOwnedOrder(orderId, req);
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-
     if (order.paymentStatus === 'paid') {
       return res.status(400).json({ error: 'Order is already paid' });
     }
 
-    const merchantId = process.env.PHONEPE_MERCHANT_ID || 'MERCHANTUAT';
-    const saltKey = process.env.PHONEPE_SALT_KEY || '96434309-7796-489d-8924-ab56988a6076';
-    const saltIndex = process.env.PHONEPE_SALT_INDEX || '1';
-    const isProd = process.env.PHONEPE_ENV === 'production';
-    const baseUrl = isProd
-      ? 'https://api.phonepe.com/apis/hermes'
-      : 'https://api-preprod.phonepe.com/apis/hermes';
-
-    const transactionId = 'TXN_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
-
-    const amountPaise = Math.round(order.totalAmount * 100);
-
-    const callbackUrl = process.env.PHONEPE_CALLBACK_URL || `https://zip-backend-myp0.onrender.com/api/payments/phonepe-callback`;
-
-    const payload = {
-      merchantId,
-      merchantTransactionId: transactionId,
-      merchantUserId: 'MUID_' + (req.user ? req.user.id : 'guest'),
-      amount: amountPaise,
-      redirectUrl: `${process.env.FRONTEND_URL || 'https://vishalkharat951.github.io'}/my-orders.html`,
-      redirectMode: 'POST',
-      callbackUrl,
-      mobileNumber: '',
-      paymentInstrument: { type: 'PAY_PAGE' },
-    };
-
-    const payloadJson = JSON.stringify(payload);
-    const payloadBase64 = Buffer.from(payloadJson).toString('base64');
-
-    const stringToSign = payloadBase64 + '/pg/v1/pay' + saltKey;
-    const sha256 = crypto.createHash('sha256').update(stringToSign).digest('hex');
-    const xVerify = sha256 + '###' + saltIndex;
-
-    const phonepeRes = await fetch(`${baseUrl}/pg/v1/pay`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-VERIFY': xVerify,
-      },
-      body: JSON.stringify({ request: payloadBase64 }),
+    const result = await phonepe.initiatePayment({
+      order,
+      mobileNumber,
+      redirectUrl: req.body.redirectUrl,
     });
 
-    const phonepeData = await phonepeRes.json();
-
-    if (phonepeData.success) {
-      order.transactionId = transactionId;
-      order.paymentMethod = 'phonepe';
-      await order.save();
-
-      return res.json({
-        success: true,
-        redirectUrl: phonepeData.data.instrumentResponse.redirectInfo.url,
-        transactionId,
-      });
-    }
-
-    res.status(502).json({ error: 'PhonePe initiation failed', details: phonepeData });
+    return res.json({
+      success: true,
+      redirectUrl: result.redirectUrl,
+      transactionId: result.transactionId,
+    });
   } catch (err) {
+    if (err.code === 'PHONEPE_CONFIG_ERROR') {
+      return res.status(503).json({ error: err.message });
+    }
     next(err);
   }
 };
 
-exports.phonePeCallback = async (req, res, next) => {
+exports.phonePeWebhook = async (req, res, next) => {
   try {
+    if (!phonepe.verifyWebhookSecret(req)) {
+      return res.status(401).json({ error: 'Invalid webhook secret' });
+    }
+
     const { response } = req.body;
 
-    if (!response) {
-      return res.status(400).json({ error: 'Missing response' });
-    }
+    const result = await phonepe.processWebhookCallback({
+      response,
+      xVerifyHeader: req.headers['x-verify'],
+      ip: req.ip,
+    });
 
-    const decoded = JSON.parse(Buffer.from(response, 'base64').toString('utf-8'));
-
-    const order = await Order.findOne({ transactionId: decoded.merchantTransactionId });
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found for transaction' });
-    }
-
-    if (decoded.code === 'PAYMENT_SUCCESS') {
-      order.paymentStatus = 'paid';
-      await order.save();
-      res.redirect(`${process.env.FRONTEND_URL || 'https://vishalkharat951.github.io'}/my-orders.html?payment=success`);
-    } else {
-      order.paymentStatus = 'failed';
-      await order.save();
-      res.redirect(`${process.env.FRONTEND_URL || 'https://vishalkharat951.github.io'}/checkout.html?payment=failed`);
-    }
+    res.status(200).json({
+      status: 'OK',
+      transactionId: result.decoded.data && result.decoded.data.merchantTransactionId,
+      orderState: result.result.state,
+    });
   } catch (err) {
+    if (err.code === 'PHONEPE_SIGNATURE_ERROR') {
+      return res.status(400).json({ error: 'Verification failed' });
+    }
+    if (err.code === 'PHONEPE_UNKNOWN_TRANSACTION') {
+      return res.status(400).json({ error: 'Unknown transaction' });
+    }
     next(err);
   }
 };
@@ -216,41 +151,123 @@ exports.verifyPhonePeStatus = async (req, res, next) => {
       return res.status(400).json({ error: 'transactionId is required' });
     }
 
-    const merchantId = process.env.PHONEPE_MERCHANT_ID || 'MERCHANTUAT';
-    const saltKey = process.env.PHONEPE_SALT_KEY || '96434309-7796-489d-8924-ab56988a6076';
-    const saltIndex = process.env.PHONEPE_SALT_INDEX || '1';
-    const isProd = process.env.PHONEPE_ENV === 'production';
-    const baseUrl = isProd
-      ? 'https://api.phonepe.com/apis/hermes'
-      : 'https://api-preprod.phonepe.com/apis/hermes';
+    let transaction = await PaymentTransaction.findOne({ transactionId });
 
-    const stringToSign = `/pg/v1/status/${merchantId}/${transactionId}` + saltKey;
-    const sha256 = crypto.createHash('sha256').update(stringToSign).digest('hex');
-    const xVerify = sha256 + '###' + saltIndex;
-
-    const phonepeRes = await fetch(
-      `${baseUrl}/pg/v1/status/${merchantId}/${transactionId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-VERIFY': xVerify,
-          'X-MERCHANT-ID': merchantId,
-        },
-      }
-    );
-
-    const phonepeData = await phonepeRes.json();
-
-    if (phonepeData.success && phonepeData.code === 'PAYMENT_SUCCESS') {
+    if (!transaction) {
       const order = await Order.findOne({ transactionId });
-      if (order && order.paymentStatus !== 'paid') {
-        order.paymentStatus = 'paid';
-        await order.save();
+      if (order) {
+        transaction = await PaymentTransaction.create({
+          order: order._id,
+          transactionId,
+          paymentMethod: order.paymentMethod || 'phonepe',
+          paymentStatus: 'pending',
+          amount: order.totalAmount,
+        });
       }
     }
 
-    res.json(phonepeData);
+    let data;
+    try {
+      data = await phonepe.checkStatus(transactionId);
+    } catch (err) {
+      if (err.code === 'PHONEPE_TIMEOUT') {
+        return res.status(504).json({ error: err.message });
+      }
+      return res.status(502).json({ error: err.message });
+    }
+
+    if (transaction) {
+      transaction.responseData = data;
+      transaction.lastStatusCheckedAt = new Date();
+      await transaction.save();
+
+      const sync = await phonepe.syncOrderFromTransaction(transaction, data);
+      data.sync = sync;
+    }
+
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.retryPhonePePayment = async (req, res, next) => {
+  try {
+    const { orderId, mobileNumber } = req.body;
+
+    const order = await findOwnedOrder(orderId, req);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    if (order.paymentStatus === 'paid') {
+      return res.status(400).json({ error: 'Order is already paid' });
+    }
+
+    const result = await phonepe.retryPayment({
+      order,
+      mobileNumber,
+      redirectUrl: req.body.redirectUrl,
+    });
+
+    res.json({
+      success: true,
+      redirectUrl: result.redirectUrl,
+      transactionId: result.transactionId,
+    });
+  } catch (err) {
+    if (err.code === 'PHONEPE_CONFIG_ERROR') {
+      return res.status(503).json({ error: err.message });
+    }
+    next(err);
+  }
+};
+
+exports.getTransactionStatus = async (req, res, next) => {
+  try {
+    const { transactionId } = req.params;
+    const transaction = await PaymentTransaction.findOne({ transactionId }).populate('order');
+
+    if (!transaction) {
+      return res.status(404).json({ error: 'Transaction not found' });
+    }
+
+    const order = transaction.order;
+    if (order && order.userId) {
+      if (String(order.userId._id || order.userId) !== String(req.user.id) && req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+    }
+
+    res.json({
+      transactionId: transaction.transactionId,
+      paymentStatus: transaction.paymentStatus,
+      paymentMethod: transaction.paymentMethod,
+      amount: transaction.amount,
+      currency: transaction.currency,
+      retryCount: transaction.retryCount,
+      paidAt: transaction.paidAt,
+      createdAt: transaction.createdAt,
+      updatedAt: transaction.updatedAt,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.refundPayment = async (req, res, next) => {
+  try {
+    const { transactionId } = req.params;
+    const { amount } = req.body;
+
+    const result = await phonepe.refund({ transactionId, amount });
+
+    const order = await Order.findOne({ transactionId });
+    if (order && result.success) {
+      order.paymentStatus = 'refunded';
+      await order.save();
+    }
+
+    res.json(result);
   } catch (err) {
     next(err);
   }

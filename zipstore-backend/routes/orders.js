@@ -1,19 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
-const paymentController = require('../controllers/paymentController');
-const { authenticate, optionalAuth } = require('../middleware/auth');
+const { authenticate, optionalAuth, isAdmin } = require('../middleware/auth');
+const { validateBody } = require('../middleware/security');
 
-router.post('/orders', optionalAuth, orderController.createOrder);
+const orderItemSchema = {
+  productId: { type: 'string', required: true, max: 120 },
+  quantity: { type: 'number', required: true, min: 1, max: 999 },
+};
+
+router.post(
+  '/orders',
+  optionalAuth,
+  validateBody({
+    items: { type: 'array', required: true },
+    shippingAddress: { type: 'object', required: true },
+  }),
+  orderController.createOrder
+);
 router.get('/orders/my', authenticate, orderController.getMyOrders);
 router.get('/orders/guest', orderController.getGuestOrders);
-router.post('/payments/checkout-mock', optionalAuth, paymentController.checkoutMock);
-router.post('/payments/phonepe-initiate', optionalAuth, paymentController.initiatePhonePe);
-router.post('/payments/phonepe-callback', paymentController.phonePeCallback);
-router.get('/payments/phonepe-status/:transactionId', authenticate, paymentController.verifyPhonePeStatus);
-router.post('/payments/upi-initiate', optionalAuth, paymentController.initiateUPI);
-router.get('/admin/orders', authenticate, orderController.getAdminOrders);
-router.patch('/admin/orders/:id', authenticate, orderController.updateOrderStatus);
-router.delete('/admin/orders/:id', authenticate, orderController.deleteOrder);
+router.get('/orders/:id', authenticate, orderController.getOrderById);
+router.get('/admin/orders', authenticate, isAdmin, orderController.getAdminOrders);
+router.patch('/admin/orders/:id', authenticate, isAdmin, orderController.updateOrderStatus);
+router.delete('/admin/orders/:id', authenticate, isAdmin, orderController.deleteOrder);
 
 module.exports = router;

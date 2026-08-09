@@ -9,6 +9,8 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+const paymentRoutes = require('./routes/payments');
+const { applySecurityHeaders, createRateLimiter } = require('./middleware/security');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,9 +29,22 @@ if (fs.existsSync(pluginsDir)) {
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://vishalkharat951.github.io,http://localhost:3000,http://localhost:5173').split(',');
 
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+
+app.use(applySecurityHeaders);
+
+const authLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: 'Too many authentication attempts. Please try again later.',
+});
+
+app.use('/api/auth', authLimiter);
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    if (!origin || allowedOrigins.indexOf('*') !== -1 || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -47,9 +62,18 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/auth', authRoutes);
 app.use('/api', productRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', paymentRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/payments/config', (req, res) => {
+  res.json({
+    phonepeConfigured: Boolean(process.env.PHONEPE_MERCHANT_ID && process.env.PHONEPE_SALT_KEY),
+    phonepeEnv: process.env.PHONEPE_ENV || 'test',
+    upiConfigured: Boolean(process.env.UPI_ID),
+  });
 });
 
 app.use('/api', (req, res) => {
@@ -63,9 +87,19 @@ app.use((err, req, res, next) => {
     return res.status(403).json({ error: 'CORS request rejected' });
   }
 
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal Server Error',
-  });
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'Request body too large' });
+  }
+
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ error: 'Malformed JSON in request body' });
+  }
+
+  if (err.status && err.status < 500) {
+    return res.status(err.status).json({ error: err.message || 'Request failed' });
+  }
+
+  res.status(500).json({ error: 'Something went wrong. Please try again later.' });
 });
 
 const MONGODB_URI = process.env.MONGODB_URI;

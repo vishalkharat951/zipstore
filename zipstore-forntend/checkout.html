@@ -115,11 +115,7 @@
           <div style="margin-bottom:var(--space-4)">
             <label style="display:block;font-weight:600;margin-bottom:var(--space-2)">Payment Method</label>
             <label style="display:inline-flex;align-items:center;gap:var(--space-2);margin-right:var(--space-4);cursor:pointer">
-              <input type="radio" name="paymentMethod" value="mock" checked>
-              Mock Payment
-            </label>
-            <label style="display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer">
-              <input type="radio" name="paymentMethod" value="phonepe">
+              <input type="radio" name="paymentMethod" value="phonepe" checked>
               PhonePe
             </label>
           </div>
@@ -192,30 +188,6 @@
 
             throw new Error('No redirect URL from PhonePe');
           }
-
-          const payRes = await fetch(`${API_BASE_URL}/payments/checkout-mock`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ orderId }),
-          });
-
-          if (!payRes.ok) {
-            throw new Error('Payment failed');
-          }
-
-          const payment = await payRes.json();
-
-          Cart.clear();
-
-          checkoutView.innerHTML = `
-            <div class="cart-empty">
-              <h2>Order Confirmed!</h2>
-              <p>Your order (ID: ${orderId}) has been placed successfully.</p>
-              <p>Payment status: <strong>${payment.order.paymentStatus}</strong></p>
-              <p style="margin-top:var(--space-4)"><a href="my-orders.html" class="btn btn-secondary">View My Orders</a></p>
-              <a href="shop.html" class="btn btn-outline-dark" style="margin-top:var(--space-3)">Continue Shopping</a>
-            </div>
-          `;
         } catch (err) {
           btn.disabled = false;
           btn.textContent = 'Place Order — $' + total.toFixed(2);
