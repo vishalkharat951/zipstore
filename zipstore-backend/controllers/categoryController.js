@@ -2,7 +2,7 @@ const Category = require('../models/Category');
 
 exports.getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find().populate('parent', 'name slug').sort('name');
+    const categories = await Category.find().populate('parent', 'name slug').sort('name').lean();
     res.json({ count: categories.length, categories });
   } catch (err) {
     next(err);
@@ -11,7 +11,7 @@ exports.getCategories = async (req, res, next) => {
 
 exports.getCategory = async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.id).populate('parent', 'name slug');
+    const category = await Category.findById(req.params.id).populate('parent', 'name slug').lean();
     if (!category) {
       return res.status(404).json({ error: 'Category not found' });
     }

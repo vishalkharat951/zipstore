@@ -24,6 +24,10 @@ const productSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  thumbnail: {
+    type: String,
+    default: '',
+  },
   videoUrl: {
     type: String,
     default: '',
@@ -35,5 +39,9 @@ const productSchema = new mongoose.Schema({
     default: 0,
   },
 }, { timestamps: true });
+
+productSchema.index({ category: 1, createdAt: -1 });
+productSchema.index({ price: 1 });
+productSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Product', productSchema);
