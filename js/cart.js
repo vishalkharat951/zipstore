@@ -4,49 +4,7 @@ const _inflight = new Map();
 const _dataCache = new Map();
 const CACHE_TTL = 30000;
 const PERSIST_TTL = 5 * 60 * 1000;
-const PERSIST_MAX = 400 * 1024;
-
-function showToast(msg, type) {
-  const el = document.getElementById('toast');
-  if (!el) return;
-  el.textContent = msg;
-  el.className = 'toast ' + (type || '');
-  el.classList.add('show');
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 2500);
-}
-
-function debounce(fn, wait = 300) {
-  let t;
-  return function (...args) {
-    clearTimeout(t);
-    t = setTimeout(() => fn.apply(this, args), wait);
-  };
-}
-
-function escAttr(value) {
-  return String(value == null ? '' : value)
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-function productImage(p, index = 0) {
-  if (p && p.thumbnail) return p.thumbnail;
-  if (p && p.images && p.images.length) return p.images[index] || p.images[0];
-  if (p && p.imageUrl) {
-    if (p.imageUrl[0] === '[') {
-      try {
-        const parsed = JSON.parse(p.imageUrl);
-        if (Array.isArray(parsed) && parsed.length) return parsed[index] || parsed[0];
-      } catch { /* ignore */ }
-    } else {
-      return p.imageUrl;
-    }
-  }
-  return 'https://placehold.co/400x400?text=No+Image';
-}
+const PERSIST_MAX = 100 * 1024;
 
 function persistKey(url) {
   return 'zipstore_cache_' + url;

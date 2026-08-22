@@ -116,30 +116,13 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 
-function parseOrderPagination(query) {
-  const page = Math.max(1, parseInt(query.page, 10) || 1);
-  const limit = Math.min(200, Math.max(1, parseInt(query.limit, 10) || 100));
-  return { page, limit, skip: (page - 1) * limit };
-}
-
 exports.getAdminOrders = async (req, res, next) => {
   try {
-    const { page, limit, skip } = parseOrderPagination(req.query);
-    const filter = {};
-    if (req.query.status && VALID_ORDER_STATUSES.includes(req.query.status)) {
-      filter.orderStatus = req.query.status;
-    }
-    const [orders, total] = await Promise.all([
-      Order.find(filter)
-        .populate('userId', 'name email')
-        .populate('items.productId', 'title price')
-        .sort('-createdAt')
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Order.countDocuments(filter),
-    ]);
-    res.json({ count: orders.length, total, page, pages: Math.ceil(total / limit), orders });
+    const orders = await Order.find()
+      .populate('userId', 'name email')
+      .populate('items.productId', 'title price')
+      .sort('-createdAt');
+    res.json({ count: orders.length, orders });
   } catch (err) {
     next(err);
   }
@@ -147,18 +130,10 @@ exports.getAdminOrders = async (req, res, next) => {
 
 exports.getMyOrders = async (req, res, next) => {
   try {
-    const { page, limit, skip } = parseOrderPagination(req.query);
-    const filter = { userId: req.user.id };
-    const [orders, total] = await Promise.all([
-      Order.find(filter)
-        .populate('items.productId', 'title price images')
-        .sort('-createdAt')
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Order.countDocuments(filter),
-    ]);
-    res.json({ count: orders.length, total, page, pages: Math.ceil(total / limit), orders });
+    const orders = await Order.find({ userId: req.user.id })
+      .populate('items.productId', 'title price images')
+      .sort('-createdAt');
+    res.json({ count: orders.length, orders });
   } catch (err) {
     next(err);
   }
@@ -242,8 +217,7 @@ exports.getGuestOrders = async (req, res, next) => {
 
     const orders = await Order.find(match)
       .populate('items.productId', 'title price images')
-      .sort('-createdAt')
-      .lean();
+      .sort('-createdAt');
     res.json({ count: orders.length, orders });
   } catch (err) {
     next(err);

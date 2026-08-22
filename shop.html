@@ -6,23 +6,25 @@
 <title>ZipStore — Shop</title>
 <link rel="preconnect" href="https://zip-backend-myp0.onrender.com" crossorigin>
 <link rel="dns-prefetch" href="https://zip-backend-myp0.onrender.com">
+<link rel="preconnect" href="https://placehold.co">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/policies.css">
-<style>
-.product-skeleton{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
-.skeleton-shimmer{position:relative;overflow:hidden;background:#eef1f6}
-.skeleton-shimmer::after{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:sk 1.4s infinite}
-@keyframes sk{to{transform:translateX(100%)}}
-.sk-img{aspect-ratio:1/1}
-.sk-line{height:14px;border-radius:6px;margin:10px 14px 0}
-.sk-line.short{width:45%}
-.sk-line.btn{width:70%;height:34px;margin:14px 14px 16px}
-.load-more-wrap{display:flex;justify-content:center;margin-top:var(--space-8)}
-#load-more-btn{padding:10px 28px}
-.loading-row{display:flex;justify-content:center;padding:var(--space-8) 0;color:var(--color-text-secondary)}
-</style>
+<link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
+<div id="app-loader" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff">
+<div class="loader-inner">
+<div class="loader-logo-wrap">
+<div class="loader-spinner"></div>
+<div class="loader-logo">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+</div>
+</div>
+<div class="loader-name">ZipStore</div>
+<div class="loader-text">Preparing your shopping experience<span class="loader-dots"></span></div>
+<div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+</div>
 <nav class="navbar">
 <div class="container">
 <a href="index.html" class="navbar-brand">ZipStore</a>
@@ -67,10 +69,6 @@
 <input type="text" id="search-input" placeholder="Search products..." />
 </div>
 <div class="product-grid" id="product-grid"></div>
-<div id="grid-status" class="loading-row" style="display:none"></div>
-<div class="load-more-wrap" id="load-more-wrap" style="display:none">
-<button class="btn btn-outline" id="load-more-btn">Load More</button>
-</div>
 </div>
 </section>
 <footer class="footer footer-extended">
@@ -119,168 +117,76 @@
 <div class="toast" id="toast"></div>
 <script src="js/cart.js"></script>
 <script>
-(function () {
-  'use strict';
-  const grid = document.getElementById('product-grid');
-  const categoryFilter = document.getElementById('category-filter');
-  const searchInput = document.getElementById('search-input');
-  const statusEl = document.getElementById('grid-status');
-  const loadMoreWrap = document.getElementById('load-more-wrap');
-  const loadMoreBtn = document.getElementById('load-more-btn');
-
-  const PAGE_SIZE = 24;
-  let allProducts = [];
-  let allCategories = [];
-  let page = 0;
-  let hasMore = true;
-  let loading = false;
-  let loadingMore = false;
-
-  function productCard(p) {
-    const img = productImage(p);
-    const payload = {
-      _id: p._id,
-      title: p.title,
-      price: p.price,
-      imageUrl: img,
-    };
-    return `
-    <div class="product-card">
-      <a href="product.html?id=${encodeURIComponent(p._id)}"><img src="${escAttr(img)}" alt="${escAttr(p.title)}" class="product-card-image" loading="lazy" decoding="async"></a>
-      <div class="product-card-body">
-        <span class="product-card-category">${escAttr(p.category?.name || 'General')}</span>
-        <h3 class="product-card-title">${escAttr(p.title)}</h3>
-        <p class="product-card-price">₹${Number(p.price).toFixed(2)}</p>
-        <div class="product-card-footer">
-          <a href="product.html?id=${encodeURIComponent(p._id)}" class="btn btn-secondary btn-sm">View</a>
-          <button class="btn btn-outline-dark btn-sm" data-add-to-cart='${escAttr(JSON.stringify(payload))}'>Add to Cart</button>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  function skeletonCards(n) {
-    return Array.from({ length: Math.min(n, 8) }, () => `
-      <div class="product-skeleton" aria-hidden="true">
-        <div class="skeleton-shimmer sk-img"></div>
-        <div class="skeleton-shimmer sk-line"></div>
-        <div class="skeleton-shimmer sk-line short"></div>
-        <div class="skeleton-shimmer sk-line btn"></div>
-      </div>`).join('');
-  }
-
-  function matchesFilters(p) {
-    const cat = categoryFilter.value;
-    const q = searchInput.value.trim().toLowerCase();
-    if (cat && p.category?._id !== cat && p.category !== cat) return false;
-    if (q && !String(p.title || '').toLowerCase().includes(q)) return false;
-    return true;
-  }
-
-  function applyFilters() {
-    const filtered = allProducts.filter(matchesFilters);
-    if (!filtered.length) {
-      grid.innerHTML = '<p class="error-message">No products match your filters.</p>';
-      return;
-    }
-    grid.innerHTML = filtered.map(productCard).join('');
-  }
-
-  function buildQuery(nextPage) {
-    const params = new URLSearchParams();
-    params.set('list', '1');
-    params.set('page', String(nextPage));
-    params.set('limit', String(PAGE_SIZE));
-    const cat = categoryFilter.value;
-    if (cat) params.set('category', cat);
-    const q = searchInput.value.trim();
-    if (q) params.set('search', q);
-    return params.toString();
-  }
-
-  function setLoadingMore(on) {
-    loadingMore = on;
-    loadMoreBtn.disabled = on;
-    loadMoreBtn.textContent = on ? 'Loading...' : 'Load More';
-  }
-
-  function refreshGridStatus() {
-    if (allProducts.length === 0 && !loading) {
-      statusEl.style.display = 'flex';
-      statusEl.textContent = 'No products found.';
-    } else {
-      statusEl.style.display = 'none';
-    }
-    loadMoreWrap.style.display = hasMore && allProducts.length ? 'flex' : 'none';
-  }
-
-  function fetchPage(reset) {
-    if (loading) return;
-    loading = true;
-    const nextPage = reset ? 1 : page + 1;
-    if (reset) {
-      grid.innerHTML = skeletonCards(PAGE_SIZE);
-    }
-    loadMoreWrap.style.display = 'none';
-
-    apiGet(`${API_BASE_URL}/products?${buildQuery(nextPage)}`)
-      .then(data => {
-        const products = data.products || data;
-        const total = data.total != null ? data.total : products.length;
-        const pages = data.pages != null ? data.pages : 1;
-
-        if (reset) {
-          allProducts = products;
-          page = 1;
-        } else {
-          const seen = new Set(allProducts.map(p => p._id));
-          allProducts = allProducts.concat(products.filter(p => !seen.has(p._id)));
-          page = nextPage;
-        }
-        hasMore = page < pages && products.length === PAGE_SIZE;
-        loading = false;
-        applyFilters();
-        refreshGridStatus();
-      })
-      .catch(() => {
-        loading = false;
-        grid.innerHTML = '<p class="error-message">Failed to load products. Make sure the API is running.</p>';
-        refreshGridStatus();
-      })
-      .finally(() => {
-        setLoadingMore(false);
-      });
-  }
-
-  function loadCategories() {
-    return apiGet(`${API_BASE_URL}/categories`)
-      .then(data => {
-        const categories = data.categories || data;
-        allCategories = categories.map(c => ({ _id: c._id, name: c.name }));
-        categoryFilter.innerHTML = '<option value="">All Categories</option>' +
-          allCategories.map(c => `<option value="${escAttr(c._id)}">${escAttr(c.name)}</option>`).join('');
-      });
-  }
-
-  grid.addEventListener('click', e => {
-    const btn = e.target.closest('[data-add-to-cart]');
-    if (!btn) return;
-    try {
-      const product = JSON.parse(btn.dataset.addToCart);
-      Cart.add(product);
-      showToast(`${product.title} added to cart!`, 'success');
-    } catch (_) {
-      showToast('Could not add item to cart.', 'error');
-    }
-  });
-
-  categoryFilter.addEventListener('change', () => fetchPage(true));
-  searchInput.addEventListener('input', debounce(() => fetchPage(true), 300));
-  loadMoreBtn.addEventListener('click', () => fetchPage(false));
-
-  Promise.all([loadCategories(), fetchPage(true)]);
-})();
+const grid = document.getElementById('product-grid');
+const categoryFilter = document.getElementById('category-filter');
+const searchInput = document.getElementById('search-input');
+let allProducts = [];
+let allCategories = [];
+function renderProducts() {
+const cat = categoryFilter.value;
+const query = searchInput.value.toLowerCase();
+const filtered = allProducts.filter(p => {
+const matchCat = !cat || (p.category?._id === cat);
+const matchSearch = !query || p.title.toLowerCase().includes(query);
+return matchCat && matchSearch;
+});
+if (filtered.length === 0) {
+grid.innerHTML = '<p class="error-message">No products match your filters.</p>';
+return;
+}
+grid.innerHTML = filtered.map(p => `
+<div class="product-card">
+<a href="product.html?id=${p._id}"><img src="${(p.images && p.images[0]) || (p.imageUrl && p.imageUrl[0] === '[' ? JSON.parse(p.imageUrl)[0] : p.imageUrl) || 'https://placehold.co/400x400?text=No+Image'}" alt="${p.title}" class="product-card-image" loading="lazy"></a>
+<div class="product-card-body">
+<span class="product-card-category">${p.category?.name || 'General'}</span>
+<h3 class="product-card-title">${p.title}</h3>
+<p class="product-card-price">₹${Number(p.price).toFixed(2)}</p>
+<div class="product-card-footer">
+<a href="product.html?id=${p._id}" class="btn btn-secondary btn-sm">View</a>
+<button class="btn btn-outline-dark btn-sm" data-add-to-cart='${JSON.stringify(p)}'>Add to Cart</button>
+</div>
+</div>
+</div>
+`).join('');
+grid.querySelectorAll('[data-add-to-cart]').forEach(btn => {
+btn.addEventListener('click', () => {
+const product = JSON.parse(btn.dataset.addToCart);
+Cart.add(product);
+showToast(`${product.title} added to cart!`, 'success');
+});
+});
+}
+function showToast(msg, type) {
+const el = document.getElementById('toast');
+el.textContent = msg;
+el.className = 'toast ' + (type || '');
+el.classList.add('show');
+setTimeout(() => el.classList.remove('show'), 2500);
+}
+function loadCategories() {
+return apiGet(`${API_BASE_URL}/categories`)
+.then(data => {
+const categories = data.categories || data;
+allCategories = categories.map(c => ({ _id: c._id, name: c.name }));
+categoryFilter.innerHTML = '<option value="">All Categories</option>' +
+allCategories.map(c => `<option value="${c._id}">${c.name}</option>`).join('');
+});
+}
+function loadProducts() {
+return apiGet(`${API_BASE_URL}/products`)
+.then(data => {
+allProducts = data.products || data;
+});
+}
+Promise.all([loadProducts(), loadCategories()])
+.then(() => renderProducts())
+.catch(() => {
+grid.innerHTML = '<p class="error-message">Failed to load products. Make sure the API is running.</p>';
+});
+categoryFilter.addEventListener('change', renderProducts);
+searchInput.addEventListener('input', renderProducts);
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
+<script src="js/loader.js"></script>
 </body>
 </html>
