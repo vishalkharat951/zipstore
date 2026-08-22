@@ -27,7 +27,7 @@ if (fs.existsSync(pluginsDir)) {
   }
 }
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://vishalkharat951.github.io,http://localhost:3000,http://localhost:5173').split(',');
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://zipsto.net,https://www.zipsto.net,https://vishalkharat951.github.io,http://localhost:3000,http://localhost:5173').split(',');
 
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
@@ -63,6 +63,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api', productRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', paymentRoutes);
+
+// Safe read caching: catalog GETs may be cached briefly by browser/proxies
+// because product data changes rarely. Everything else (orders, payments,
+// auth) must never be cached.
+app.use('/api', (req, res, next) => {
+  if (req.method === 'GET') {
+    if (req.path.startsWith('/products') || req.path.startsWith('/categories') || req.path === '/health') {
+      res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=30');
+    } else {
+      res.set('Cache-Control', 'no-store');
+    }
+  }
+  next();
+});
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
